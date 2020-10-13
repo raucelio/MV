@@ -4,106 +4,98 @@
 **Missing Values** (ou valores ausentes) é um fenômeno  gerado  pela falta de um valor em uma variável para uma  observação.
 
 
-
 ## Missing no R
 
-No R, quando um elemento, valor, **não está disponível**, a sua posição no vetor é  assinalada por  `NA`. Exemplo:
+No R, um elemento não é conhecido em um vetor   **não está disponível**, a sua posição  é  assinalada com um  `NA`. Exemplo:
 
-```
-> a <- c(1, 2, 3, NA)
-> b <- c('a', NA, 'C')
-> c <- c(FALSE, TRUE, NA)
+```{r}
+a <- c(1, 2, 3, NA)
+a
+b <- c('a', NA, 'C')
+b
+c <- c(FALSE, TRUE, NA)
+c
 ```
 
 Um elemento resultante de uma indeterminação matemática é assinalado por `NaN`.
 
-```
-> a <- c(4, 5, 8, 0)/0
-> a
-[1] Inf Inf Inf NaN
+```{r}
+a <- c(4, 5, 8, 0)/0
+a
 ```
 
 A função `is.na(x)` retorna um vetor do mesmos tamanho  do vetor x, com valor `TRUE` na mesma posição onde se encontra um  `NA`.
 
-```
-> a <- c(4, NA, 8, NA)
-> is.na(a)
-[1] FALSE  TRUE FALSE  TRUE
-
+```{r}
+a <- c(4, NA, 8, NA)
+a
 ```
 
 A função `is.nan(x)` retorna um vetor do mesmos tamanho  do vetor x, com valor `TRUE` na mesma posição onde se encontra um  `NaN`. No exemplo seguinte, observa-se que `is.na(x)` retorna `TRUE` quando encontra um `NaN`.
 
-```
+```{r}
 a <- c(Inf-Inf, 0/0, NA, NaN)
 is.nan(a)
-[1]  TRUE  TRUE FALSE  TRUE
 is.na(a)
-[1] TRUE TRUE TRUE TRUE
 ```
 
 ### Como o R trata missing value
 
 Quando há um `Na`envolvido em uma operação, o resultado é um `NA`. Isto ocorre, porque os dados envolvidos não estão definidos.
 
-```
-> a <- c(1,2,3,NA)
-> mean(a)
-[1] NA
-> 5 + NA
-[1] NA
+```{r}
+a <- c(1,2,3,NA)
+mean(a)
+5 + NA
 ```
 
 Em muitas funções do R há o arumento `na.rm=`, que recebe um valor lógico `TRUE` ou `FALSE`, se for atribuído o valor `TRUE` os elemetos `NA` não são considerados.
 
-```
-> a <- c(1,2,3,NA)
-> mean(a)
-[1] NA
-> mean(a, na.rm = TRUE)
-[1] 2
+```{r}
+a <- c(1,2,3,NA)
+mean(a)
+mean(a, na.rm = TRUE)
 ```
 
-Em uma operação relacional `==`, `>`, `>=`, `<` , `<=` ou `!=`, quando um dos operandos é `NA`, o resultado é um `NA`. Assim, para verificar se um valor `x` é `NA` não use `x == NA`, use `is.na(x)`.  
+Em uma operação relacional,  `==`, `>`, `>=`, `<` , `<=` ou `!=`, se um dos operandos é `NA` então resultado é um `NA`. Assim, para verificar se um valor `x` é `NA` não use `x == NA`, use `is.na(x)`. 
 
-Há análises no R que só atuam em um conjunto de dados completos, logo exitindo, ao menos um, `NA` na observação, essa é excluída da análise. Observe o resultado da análise de regressão. Na análise de regressão, abaixo, das 153 observações, 37 foram eleiminadas porque apresentavam `NA` na variável dependente `Ozone`.
+```{r}
+a <- 5
+
+a == NA
+
+is.na(a)
+
+a != NA
+
+a < NA
+
+a > NA
 
 ```
+
+
+O R apresenta análises que só atuam em um conjunto de dados completos. Logo, exitindo, ao menos um, `NA` na observação, essa é desconsiderada. Observe o resultado da análise de regressão abaixo, das 153 observações, 37 foram eleiminadas porque apresentavam `NA` na variável dependente `Ozone`.
+
+```{r}
 # As observações com NA em Ozone e Wind são eliminadas
 # da análise.
 
-> fit <- lm(Ozone ~ Wind, data = airquality)
-> summary(fit) 
-
-Call:
-lm(formula = Ozone ~ Wind, data = airquality)
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--51.572 -18.854  -4.868  15.234  90.000 
-
-Coefficients:
-            Estimate Std. Error t value Pr(>|t|)    
-(Intercept)  96.8729     7.2387   13.38  < 2e-16 ***
-Wind         -5.5509     0.6904   -8.04 9.27e-13 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 26.47 on 114 degrees of freedom
-  (37 observations deleted due to missingness)
-Multiple R-squared:  0.3619,	Adjusted R-squared:  0.3563 
-F-statistic: 64.64 on 1 and 114 DF,  p-value: 9.272e-13
-
+fit <- lm(Ozone ~ Wind, data = airquality)
+summary(fit) 
 ```
 
 ## Conceitos de MCAR, MAR e MNAR
 
-Rubin (1976) classificou os problemas de dados perdidos em três categorias. Em sua teoria, cada ponto de dados tem alguma probabilidade de ser ausente. O processo que governa essas probabilidades é chamado de *missing data mechanism* or *response mechanism*. Os processo apresentados são:
+Rubin [@rubin1976inference] classificou os problemas de dados perdidos em três categorias. Em sua teoria, cada ponto de dados tem alguma probabilidade de ser ausente. O processo que governa essas probabilidades é chamado de *missing data mechanism* or *response mechanism*. Os processo apresentados são:
 
 + MCAR (*missing completely at random*)
 + MAR (*missing at random*)
 + MNAR (*missing not at random*)
 
+Esta classificação  é importante para entender porque alguns métodos não funcionam. Sua teoria estabelece as condições sob as quais um método  *missing value* podem fornecer inferências estatísticas válidas. 
+
+A maioria das correções simples funciona apenas sob a suposição MCAR que é  restritiva e freqüentemente irreal. Se MCAR for aplicável, tais métodos podem fornecer estimativas viesadas.
 
 ### MCAR
 
@@ -122,8 +114,7 @@ Embora seja conveniente, o MCAR geralmente  não é realista para os dados dispo
 
 O processo MAR ocorre a probabilidade de ser missing values é a mesma apenas dentro de grupos definidos por dados observados.
 
-MAR é uma classe muito mais ampla do que MCAR. Por exemplo, 
-
+O processo MAR é um muito mais ampla do que MCAR. Por exemplo: 
 
 1. Uma balanças colocada  em uma superfície macia pode, produzir mais missing values do que quando colocada em uma superfície rígida. Se, entretanto, sabemos o tipo de superfície e se podemos assumir MCAR dentro do tipo de superfície, então os dados são MAR.
 
@@ -145,8 +136,6 @@ MNAR inclui a possibilidade de que a escala produza mais valores ausentes para o
 Um exemplo de MNAR em pesquisas de opinião pública ocorre se aqueles com opiniões mais fracas respondem com menos frequência. 
 
 MNAR é o caso mais complexo. As estratégias para lidar com o MNAR são encontrar mais dados sobre as causas da falta ou realizar análises hipotéticas para ver o quão sensíveis são  os resultados em vários cenários. 
-
-A distinção de Rubin é importante para entender por que alguns métodos não funcionam. Sua teoria estabelece as condições sob as quais um método  de dados ausentes pode fornecer inferências estatísticas válidas. A maioria das correções simples funciona apenas sob a suposição MCAR restritiva e freqüentemente irreal. Se MCAR for implausível, tais métodos podem fornecer estimativas viesadas.
 
 
 <!-- You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods). -->
