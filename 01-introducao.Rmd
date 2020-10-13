@@ -173,4 +173,4 @@ idade | QI | MCAR | MAR | MNAR
 
 2. **CAR** - os respondentes mais novos não informaram o valor do **QI**. Atente para o fato: os **missing values** na variável **QI** estão relacionados com a variável **idade**. 
 
-3. MNAR - Os respondentes com **QI** mais baixo são `NA`. As origens dos `NA` na variável **QI** é influênciada pela variável **QI**. 
+3. MNAR - Os respondentes com **QI** mais baixo são `NA`. As origens dos `NA` em  **QI** é influênciada pela própria variável **QI**. 
