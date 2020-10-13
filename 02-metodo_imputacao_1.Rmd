@@ -26,10 +26,15 @@ No entanto, a *listwise deletion* nem sempre é ruim. As implicações dos dados
 No contexto da análise de regressão, a listwise deletion
 o possui algumas propriedades exclusivas que a tornam atraente em ambientes específicos. Há casos em que a exclusão listwise pode fornecer estimativas melhores do que até mesmo os procedimentos mais sofisticados. 
 
-A *Listwise deletio* pode introduzir inconsistências nos relatórios de uma pesquisa. Uma vez que a *listwise deletion*  é aplicada automaticamente ao conjunto ativo de variáveis,  análises diferentes nos mesmos dados são freqüentemente baseadas em diferentes subamostras. 
+A *Listwise deletion* pode introduzir inconsistências nos relatórios de uma pesquisa. Uma vez que a *listwise deletion*  é aplicada automaticamente ao conjunto ativo de variáveis,  análises diferentes nos mesmos dados são freqüentemente baseadas em diferentes subamostras. 
 É possível produzir uma subamostra global usando todas as variáveis ativas.  Na prática, isso pode gerar problemas, pois a subamostra global sempre terá menos casos do que cada uma das subamostras, portanto, é comum criar subconjuntos diferentes para tabelas diferentes. Isso complica sua comparação e generalização para a população de estudo. Em alguns casos, a *listwise deletion*  pode levar
 a subamostras sem sentido. Por exemplo, as observações no dataset *airquality*  correspondem a 154 dias consecutivos entre 1º de maio de
  1973 e 30 de setembro de 1973. A exclusão de dias afeta a base de tempo. Seria muito mais difícil, senão impossível, realizar análises que  envolvam tempo, por exemplo, para identificar padrões semanais ou ajustar modelos autorregressivos que preveem de dias anteriores.
+
+
+### Droping Variable
+
+Caso uma  variável possuir mais de 60% de *missing values* nas observações, uma alternativa é retirar essa variável , mas somente se a variável for escencial a análise. Dito isto, a iputação é sempre uma escolha preferida em vez de eliminar variáveis.
 
 
 ### Pairwise deletion
