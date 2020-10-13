@@ -152,9 +152,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.1" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#métodos-básicos"><i class="fa fa-check"></i><b>3.1</b> Métodos Básicos</a>
 <ul>
 <li class="chapter" data-level="3.1.1" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#listwise-deletion"><i class="fa fa-check"></i><b>3.1.1</b> Listwise deletion</a></li>
-<li class="chapter" data-level="3.1.2" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#pairwise-deletion"><i class="fa fa-check"></i><b>3.1.2</b> Pairwise deletion</a></li>
-<li class="chapter" data-level="3.1.3" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#mean-imputation"><i class="fa fa-check"></i><b>3.1.3</b> Mean imputation</a></li>
-<li class="chapter" data-level="3.1.4" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#regression-imputation"><i class="fa fa-check"></i><b>3.1.4</b> Regression imputation</a></li>
+<li class="chapter" data-level="3.1.2" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#dropping-variable"><i class="fa fa-check"></i><b>3.1.2</b> Dropping Variable</a></li>
+<li class="chapter" data-level="3.1.3" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#pairwise-deletion"><i class="fa fa-check"></i><b>3.1.3</b> Pairwise deletion</a></li>
+<li class="chapter" data-level="3.1.4" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#mean-imputation"><i class="fa fa-check"></i><b>3.1.4</b> Mean imputation</a></li>
+<li class="chapter" data-level="3.1.5" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#regression-imputation"><i class="fa fa-check"></i><b>3.1.5</b> Regression imputation</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="métodos-básicos-de-imputação-ii.html"><a href="métodos-básicos-de-imputação-ii.html"><i class="fa fa-check"></i><b>4</b> Métodos Básicos de Imputação - II</a>
@@ -205,15 +206,19 @@ mas que geralmente são maiores em relação a todos os dados disponíveis.</p>
 <!-- na média estimada aumenta com a diferença entre as médias dos casos observados  e ausentes e com a proporção dos dados ausentes.  -->
 <!-- Schafer e Graham (2002) relataram um elegante estudo de simulação que demonstra o viés da deleção listwise sob MAR e MNAR. -->
 <p>No entanto, a <em>listwise deletion</em> nem sempre é ruim. As implicações dos dados ausentes são diferentes dependendo de onde eles ocorrem (resultados ou preditores) e do parâmetro e forma do modelo da análise completa dos dados.</p>
-<p>No contexto da análise de regressão, a listwise deletion
+<p>No contexto da análise de regressão, a <em>listwise deletion</em>
 o possui algumas propriedades exclusivas que a tornam atraente em ambientes específicos. Há casos em que a exclusão listwise pode fornecer estimativas melhores do que até mesmo os procedimentos mais sofisticados.</p>
-<p>A <em>Listwise deletio</em> pode introduzir inconsistências nos relatórios de uma pesquisa. Uma vez que a <em>listwise deletion</em> é aplicada automaticamente ao conjunto ativo de variáveis, análises diferentes nos mesmos dados são freqüentemente baseadas em diferentes subamostras.
+<p>A <em>Listwise deletion</em> pode introduzir inconsistências nos relatórios de uma pesquisa. Uma vez que a <em>listwise deletion</em> é aplicada automaticamente ao conjunto ativo de variáveis, análises diferentes nos mesmos dados são freqüentemente baseadas em diferentes subamostras.
 É possível produzir uma subamostra global usando todas as variáveis ativas. Na prática, isso pode gerar problemas, pois a subamostra global sempre terá menos casos do que cada uma das subamostras, portanto, é comum criar subconjuntos diferentes para tabelas diferentes. Isso complica sua comparação e generalização para a população de estudo. Em alguns casos, a <em>listwise deletion</em> pode levar
 a subamostras sem sentido. Por exemplo, as observações no dataset <em>airquality</em> correspondem a 154 dias consecutivos entre 1º de maio de
 1973 e 30 de setembro de 1973. A exclusão de dias afeta a base de tempo. Seria muito mais difícil, senão impossível, realizar análises que envolvam tempo, por exemplo, para identificar padrões semanais ou ajustar modelos autorregressivos que preveem de dias anteriores.</p>
 </div>
-<div id="pairwise-deletion" class="section level3" number="3.1.2">
-<h3><span class="header-section-number">3.1.2</span> Pairwise deletion</h3>
+<div id="dropping-variable" class="section level3" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Dropping Variable</h3>
+<p>Caso uma variável possuir mais de 60% de <em>missing values</em> nas observações, uma alternativa é retirar essa variável , mas somente se a variável for escencial a análise. Dito isto, a iputação é sempre uma escolha preferida em vez de eliminar variáveis.</p>
+</div>
+<div id="pairwise-deletion" class="section level3" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Pairwise deletion</h3>
 <p>A <em>pairwise deletions</em>, também conhecida como análise de caso disponível, tenta remediar o problema de perda de observações que ocorrem na <em>listwise deletion</em>.</p>
 <p>O método calcula as médias e (co) variâncias para todos os dados observados disponíveis. Assim, a média da variável X é baseada em todos os casos com dados observados em X, a média da variável Y usa todos os casos com valores de Y observados. Para a correlação e covariância, todos os dados são considerados nos quais X e Y não são <code>NA</code>. Posteriormente, a matriz é alimentada em um programa para análise de regressão, análise fatorial ou outros procedimentos de modelagem.</p>
 <p>Podemos calcular a média, covariâncias e correlações dos dados de qualidade aérea sob exclusão de pares em R como:</p>
@@ -227,8 +232,8 @@ cov(airquality, use = “pair”)</p>
 por trás da exclusão aos pares é usar todas as informações disponíveis. Embora essa ideia seja boa, a análise adequada da matriz de pares requer técnicas sofisticadas de otimização e fórmulas especiais para calcular os erros padrão <!--- (Van Praag et al., 1985; Marsh, 1998)--->.</p>
 <!---A Pairwise deletion deve ser usada apenas se o procedimento a seguir for especificamente projetado para levar a exclusão em consideração. A atraente simplicidade da exclusão aos pares como um método geral de dados perdidos é perdida.--->
 </div>
-<div id="mean-imputation" class="section level3" number="3.1.3">
-<h3><span class="header-section-number">3.1.3</span> Mean imputation</h3>
+<div id="mean-imputation" class="section level3" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> Mean imputation</h3>
 <p>A <em>mean imputation</em> é substituir o <code>NA</code> em uma variável pela média dos valores observados. No caso da variável ser categórica, o valor <code>NA</code> pode ser substituído pela moda.</p>
 <p>Uma solução rápida para os dados ausentes é substituí-los pela média. Podemos usar a moda para dados categóricos.</p>
 <p>O pacote R <code>mice</code> (Van Buuren e Groothuis-Oudshoorn, 2011) implementa a <em>mean imputation </em>. Seja o dataset <code>airquality</code>, para imputar a média nas variáveis <code>Ozone</code> e <code>Solar.R</code> pode ser feito por</p>
@@ -308,8 +313,8 @@ Figure 3.2: Relação entre Ozone e Solar.R
 <p>A imputação média é uma solução rápida e simples para os <em>missing values</em>. No entanto, subestima a variância, altera as relações entre as variáveis, enviesar quase qualquer estimativa diferente da média e enviesar a estimativa da média quando os dados não são MCAR.</p>
 <p>A imputação média talvez deva ser usada apenas como uma correção rápida quando um punhado de valores está faltando, e deve ser evitada em geral.</p>
 </div>
-<div id="regression-imputation" class="section level3" number="3.1.4">
-<h3><span class="header-section-number">3.1.4</span> Regression imputation</h3>
+<div id="regression-imputation" class="section level3" number="3.1.5">
+<h3><span class="header-section-number">3.1.5</span> Regression imputation</h3>
 <p>A <em>Regression imputation</em> incorpora o conhecimento de outras variáveis com a ideia de produzir imputações mais inteligentes. A primeira etapa envolve a construção de um modelo a partir dos dados observados. As previsões para os casos incompletos são então calculadas de acordo com o modelo ajustado e servem como substitutos para os dados ausentes.</p>
 <p>Suponha que modelamos <code>Ozone</code> pela função de regressão linear de <code>Solar.R</code>.</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="métodos-básicos-de-imputação.html#cb43-1" aria-hidden="true"></a>fit      &lt;-<span class="st"> </span><span class="kw">lm</span> (Ozone <span class="op">~</span><span class="st"> </span>Solar.R, <span class="dt">data =</span> airquality)</span>

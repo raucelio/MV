@@ -23,7 +23,7 @@ Uma subamostra menor pode dificultar a capacidade de detectar  os efeitos de int
  
 No entanto, a *listwise deletion* nem sempre é ruim. As implicações dos dados ausentes são diferentes dependendo de onde eles ocorrem (resultados ou preditores) e do parâmetro e forma do modelo da análise completa dos dados.  
 
-No contexto da análise de regressão, a listwise deletion
+No contexto da análise de regressão, a *listwise deletion*
 o possui algumas propriedades exclusivas que a tornam atraente em ambientes específicos. Há casos em que a exclusão listwise pode fornecer estimativas melhores do que até mesmo os procedimentos mais sofisticados. 
 
 A *Listwise deletion* pode introduzir inconsistências nos relatórios de uma pesquisa. Uma vez que a *listwise deletion*  é aplicada automaticamente ao conjunto ativo de variáveis,  análises diferentes nos mesmos dados são freqüentemente baseadas em diferentes subamostras. 
@@ -32,9 +32,9 @@ a subamostras sem sentido. Por exemplo, as observações no dataset *airquality*
  1973 e 30 de setembro de 1973. A exclusão de dias afeta a base de tempo. Seria muito mais difícil, senão impossível, realizar análises que  envolvam tempo, por exemplo, para identificar padrões semanais ou ajustar modelos autorregressivos que preveem de dias anteriores.
 
 
-### Droping Variable
+### Dropping Variable
 
-Caso uma  variável possuir mais de 60% de *missing values* nas observações, uma alternativa é retirar essa variável , mas somente se a variável for escencial a análise. Dito isto, a iputação é sempre uma escolha preferida em vez de eliminar variáveis.
+Caso uma  variável possuir mais de 60% de *missing values* nas observações, uma alternativa é retirar essa variável , mas somente se a variável for escencial a análise. Dito isto, a iputação é sempre uma escolha preferida em vez de eliminar variáveis. 
 
 
 ### Pairwise deletion
