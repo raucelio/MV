@@ -1,3 +1,191 @@
-# Literature
+# Métodos Básicos de Imputação
 
-Here is a review of existing methods.
+## Métodos Básicos
+
+### Listwise deletion
+
+*Listwise deletion*  consiste em eliminar toda observação que apresente `NA` em uma de suas variáveis, é o comportamento padrão de lidar *missing values* em muitos pacotes estatísticos. A função `na.omit ()` faz o  R assumir esse comportamento, pois exclui do data frame toda observação com 'NA' em ao menos uma de suas variáveis.
+
+A principal vantagem *listwise deletion* é a conveniência, se os dados forem MCAR, essa abordagem  produz estimativas não viesadas  para médias, variâncias e coeficeintes de uma regressão. 
+
+No MCAR, a *listwise deletion*  produz erros padrão e níveis de significância que são corretos para o subconjunto reduzido de dados,
+mas que geralmente são maiores em relação a todos os dados disponíveis.
+
+Uma desvantagem da *listwise deletion* é a potencial perda de observações. Não é incomum em aplicações reais que mais da metade da amostra original seja perdida, especialmente se o número de variáveis for grande. 
+
+<!-- King et al. (2001) estimaram que a porcentagem de registros incompletos nas ciências políticas ultrapassou 50% em média, com alguns estudos tendo mais de 90% de registros incompletos. -->
+
+Uma subamostra menor pode dificultar a capacidade de detectar  os efeitos de interesse. Se os dados não forem MCAR, a *listwise deletio pode viesar as estimativas de médias, coeficientes de regressão e correlações. 
+
+<!-- Little e Rubin (2002, pp. 41–44) mostraram que o viés  -->
+<!-- na média estimada aumenta com a diferença entre as médias dos casos observados  e ausentes e com a proporção dos dados ausentes.  -->
+<!-- Schafer e Graham (2002) relataram um elegante estudo de simulação que demonstra o viés da deleção listwise sob MAR e MNAR. -->
+ 
+No entanto, a *listwise deletion* nem sempre é ruim. As implicações dos dados ausentes são diferentes dependendo de onde eles ocorrem (resultados ou preditores) e do parâmetro e forma do modelo da análise completa dos dados.  
+
+No contexto da análise de regressão, a listwise deletion
+o possui algumas propriedades exclusivas que a tornam atraente em ambientes específicos. Há casos em que a exclusão listwise pode fornecer estimativas melhores do que até mesmo os procedimentos mais sofisticados. 
+
+A *Listwise deletio* pode introduzir inconsistências nos relatórios de uma pesquisa. Uma vez que a *listwise deletion*  é aplicada automaticamente ao conjunto ativo de variáveis,  análises diferentes nos mesmos dados são freqüentemente baseadas em diferentes subamostras. 
+É possível produzir uma subamostra global usando todas as variáveis ativas.  Na prática, isso pode gerar problemas, pois a subamostra global sempre terá menos casos do que cada uma das subamostras, portanto, é comum criar subconjuntos diferentes para tabelas diferentes. Isso complica sua comparação e generalização para a população de estudo. Em alguns casos, a *listwise deletion*  pode levar
+a subamostras sem sentido. Por exemplo, as observações no dataset *airquality*  correspondem a 154 dias consecutivos entre 1º de maio de
+ 1973 e 30 de setembro de 1973. A exclusão de dias afeta a base de tempo. Seria muito mais difícil, senão impossível, realizar análises que  envolvam tempo, por exemplo, para identificar padrões semanais ou ajustar modelos autorregressivos que preveem de dias anteriores.
+
+
+### Pairwise deletion
+
+A *pairwise deletions*, também conhecida como análise de caso disponível, tenta remediar o problema de perda de observações que ocorrem na *listwise deletion*. 
+
+O método calcula as médias e (co) variâncias para  todos os dados observados disponíveis. Assim, a média da variável X é baseada em todos os casos com dados observados em X, a média da variável Y usa todos os casos com valores de Y observados.  Para a correlação e covariância, todos os dados são considerados nos quais X e Y não são `NA`. Posteriormente, a matriz  é alimentada em um programa para análise de regressão, análise fatorial ou outros procedimentos de modelagem. 
+
+Podemos calcular a média, covariâncias e correlações dos dados de qualidade aérea sob exclusão de pares em R como:
+
+> mean(airquality, na.rm = TRUE)
+> cor(airquality, use = "pair") 
+> cov(airquality, use = "pair")
+
+
+O método é simples, usa todas as informações disponíveis e produz estimativas consistentes de média, correlações e covariâncias sob MCAR <!--- (Little e Rubin, 2002, p. 55)--->. No entanto, quando consideradas em  conjunto, essas estimativas apresentam deficiências importantes. As estimativas podem ser tendenciosas  se os dados não forem MCAR.  Além disso, existem problemas computacionais. A matriz de correlação pode não ser definida positivamente, o que é um requisito para a maioria procedimentos multivariados. Podem ocorrer correlações fora do intervalo [-1, + 1], um problema que vem de diferentes subconjuntos usados para as covariâncias e as variâncias.
+
+Esses problemas são mais graves para variáveis altamente correlacionadas <!---(Little, 1992) --->. Outro problema é que não está claro qual tamanho de amostra deve ser usado para calcular os erros padrão. Tirar o tamanho médio da amostra resulta em erros padrão que são muito pequenos <!--- (Little, 1992)-->. A ideia 
+por trás da exclusão aos pares é usar todas as informações disponíveis. Embora essa ideia seja boa, a análise adequada da matriz de pares  requer técnicas sofisticadas de otimização e fórmulas especiais para calcular os erros padrão <!--- (Van Praag et al., 1985; Marsh, 1998)--->.
+
+<!---A Pairwise deletion deve ser usada apenas se o procedimento a seguir for especificamente projetado para levar a exclusão em consideração. A atraente simplicidade da exclusão aos pares como um método geral de dados perdidos é perdida.--->
+
+### Mean imputation
+
+A *mean imputation* é substituir o `NA` em uma variável pela média dos valores observados. No caso da variável ser categórica, o valor `NA` pode ser substituído pela moda.
+
+Uma solução rápida para os dados ausentes é substituí-los pela média. Podemos usar a moda para dados categóricos.   
+
+O  pacote R `mice` (Van Buuren e Groothuis-Oudshoorn, 2011) implementa a *mean imputation *. Seja o dataset `airquality`, para  imputar a média nas variáveis  `Ozone` e `Solar.R`  pode ser feito por
+
+```{r}
+library(mice)
+imp <- mice(airquality, method = "mean", m = 1, maxit = 1) 
+      
+```         
+onde 
+
++ method = "mean" - especifica a imputação média;
++ m = 1 solicita um único conjunto de dados imputado; e 
++ maxit = 1 define o número de iterações para 1 (sem iteração).
+
+A imputação média distorce a distribuição de várias maneiras. A Figura 1.1 mostra a distribuição da `Ozone` após a imputação. 
+
+```{r fig.align='center', fig.asp=.75, fig.cap='Dados Observados e imputados', message=FALSE, warning=FALSE, out.width='80%'}
+library(ggplot2)
+dados_observados <- data.frame(observado = na.omit(airquality$Ozone))
+dados_imputados  <- data.frame(imputado = imp$imp$Ozone)
+
+ggplot()+
+  geom_histogram(data = dados_observados, aes(x=observado), 
+                 bins = 15, fill="blue", alpha = 0.5)+
+  geom_histogram(data = dados_imputados, aes(x=X1),
+                 bins = 15, fill = "red", alpha = 0.5)+
+  labs(x = "Valores da variável Ozone",
+       y = "Frequência")
+
+
+```
+
+<!--O pacote `mice`  adota a convenção Abayomi para as cores (Abayomi et al., 2008). ---> 
+
+A cor azul refere-se aos dados observados , vermelho aos dados imputados (também chamados de valores sintéticos ou imputações). A cor preta,  aos dados completos, e também chamados de imputados.
+
+Na figura, a barra vermelha na média se destaca. Imputar a média criou uma distribuição bimodal. O desvio padrão nos dados completos é igual a 28.7, menor do que os dados observados, que é 33. 
+
+
+A figura do lado direito mostra que a relação entre Ozônio e Solar.R é distorcida por causa das imputações. A correlação cai de 0,35 nos pontos azuis para 0,3 nos dados combinados. 
+
+```{r fig.align='center', fig.asp=.75, fig.cap='Relação entre Ozone e Solar.R',  message=FALSE, warning=FALSE, out.width='80%'}
+
+library(ggplot2)
+
+dados <- na.omit(airquality[,c("Ozone", "Solar.R")])
+
+dados_observados <- data.frame(dados)
+
+dados_ausentes   <- airquality [is.na(airquality$Ozone) | 
+                                is.na(airquality$Solar.R),
+                                c("Ozone", "Solar.R") ]
+
+Ozone_imputado <- ifelse (is.na(dados_ausentes$Ozone),
+                          mean(dados_observados$Ozone),  
+                          dados_ausentes$Ozone)
+
+Solar.R_imputado <- ifelse (is.na(dados_ausentes$Solar.R),
+                            mean(dados_observados$Solar.R),  
+                            dados_ausentes$Solar.R)
+
+dados_imputados  <- data.frame(Ozone = Ozone_imputado,
+                               Solar.R = Solar.R_imputado)
+
+ggplot()+
+  geom_point(data = dados_observados, aes(y=Ozone, x=Solar.R), 
+             color="blue", alpha = 0.5)+
+  geom_point(data = dados_imputados, aes(y=Ozone, x = Solar.R),
+             color = "red", alpha = 0.5)+
+  labs(y = "Variável Ozone",
+       x = "Variável Solar.R")
+
+
+```
+
+A imputação média é uma solução rápida e simples para os *missing values*. No entanto, subestima a variância, altera as relações entre as variáveis, enviesar quase qualquer estimativa diferente da média e enviesar a estimativa da média quando os dados não são MCAR.
+
+A imputação média talvez deva ser usada apenas como uma correção rápida quando um punhado de valores está faltando, e deve ser evitada em geral.
+
+### Regression imputation
+
+
+A *Regression imputation* incorpora o conhecimento de outras variáveis com a ideia de produzir imputações mais inteligentes. A primeira etapa envolve a construção de um modelo a partir dos dados observados. As previsões para os casos incompletos são então calculadas de acordo com o modelo ajustado e servem como substitutos para os dados ausentes. 
+
+Suponha que modelamos `Ozone` pela função de regressão linear de `Solar.R`.
+
+```{r}
+fit      <- lm (Ozone ~ Solar.R, data = airquality)
+pred  <- predict (fit, newdata = ic (airquality))
+pred  <- data.frame (Ozone_imputado=pred, ic(airquality) )
+pred  <- pred[!is.na(Ozone_imputado), ]
+```
+
+```{r fig.align='center', fig.asp=.75, fig.cap='Regression imputation entre Ozone e Solar.R',  message=FALSE, warning=FALSE, out.width='80%'}
+
+
+dados <- na.omit(airquality[,c("Ozone", "Solar.R")])
+
+dados_observados <- data.frame(dados)
+
+
+Ozone_imputado <- pred
+
+
+
+ggplot()+
+  geom_point(data = dados_observados, aes(y=Ozone, x=Solar.R), 
+             color="blue", alpha = 0.5)+
+  geom_point(data = Ozone_imputado, 
+             aes(y=Ozone_imputado  , x = Solar.R),
+             color = "red", alpha = 0.5)+
+  labs(y = "Variável Ozone",
+       x = "Variável Solar.R")
+
+
+```
+
+
+
+Os valores imputados correspondem aos valores mais prováveis pelo modelo. No entanto, o conjunto de valores imputados variam menos do que os valores observados.<!-- Pode ser que cada um dos pontos individuais seja o melhor no modelo, mas é muito improvável que os valores reais (mas não observados) de ozônio tivessem essa distribuição.--->. A *Regression imputation* também afeta a correlação, os pontos vermelhos têm uma correlação de 1, pois estão localizados em uma linha. Se os pontos vermelhos e azuis forem combinados,  a correlação aumenta de 0.35 para 0.39. 
+A *Regression imputation* produz estimativas não viesadas  das médias sob MCAR, assim como a imputação da média, e dos pesos de regressão do
+ modelo de imputação se as variáveis explicativas forem completas. 
+
+Além disso, os coeficientes  da regressão são não viesados  sob MAR se os fatores que influenciam a falta fazem parte do modelo de regressão. 
+
+No exemplo, isso corresponde à situação em que Solar.R explicaria quaisquer diferenças na probabilidade de falta de ozônio. Por outro lado, a variabilidade dos dados imputados é sistematicamente subestimada. 
+<!---O grau de subestimação depende da variância explicada e da proporção de casos ausentes (Little e Rubin, 2002, p. 64).--->
+
+ A imputação de valores preditos pode produzir imputações realistas se a predição estiver próxima da perfeição. Nesse caso, o método reconstrói as partes que faltam a partir dos dados disponíveis. 
+
+<!--Em essência, não havia realmente nenhuma informação faltando em primeiro lugar, ela estava apenas codificada de uma forma diferente. É improvável que esse tipo de dados ausentes apareça na maioria dos aplicativos. --->
+

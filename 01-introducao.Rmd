@@ -1,21 +1,170 @@
-# Introduction {#intro}
+# Introdução {#intro}
 
-You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
 
-Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
+**Missing Values** (ou valores ausentes) é um fenômeno  gerado  pela falta de um valor em uma variável para uma  observação.
 
-```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
-par(mar = c(4, 4, .1, .1))
-plot(pressure, type = 'b', pch = 19)
+
+
+## Missing no R
+
+No R, quando um elemento, valor, **não está disponível**, a sua posição no vetor é  assinalada por  `NA`. Exemplo:
+
+```
+> a <- c(1, 2, 3, NA)
+> b <- c('a', NA, 'C')
+> c <- c(FALSE, TRUE, NA)
 ```
 
-Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab).
+Um elemento resultante de uma indeterminação matemática é assinalado por `NaN`.
 
-```{r nice-tab, tidy=FALSE}
-knitr::kable(
-  head(iris, 20), caption = 'Here is a nice table!',
-  booktabs = TRUE
-)
+```
+> a <- c(4, 5, 8, 0)/0
+> a
+[1] Inf Inf Inf NaN
 ```
 
-You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015].
+A função `is.na(x)` retorna um vetor do mesmos tamanho  do vetor x, com valor `TRUE` na mesma posição onde se encontra um  `NA`.
+
+```
+> a <- c(4, NA, 8, NA)
+> is.na(a)
+[1] FALSE  TRUE FALSE  TRUE
+
+```
+
+A função `is.nan(x)` retorna um vetor do mesmos tamanho  do vetor x, com valor `TRUE` na mesma posição onde se encontra um  `NaN`. No exemplo seguinte, observa-se que `is.na(x)` retorna `TRUE` quando encontra um `NaN`.
+
+```
+a <- c(Inf-Inf, 0/0, NA, NaN)
+is.nan(a)
+[1]  TRUE  TRUE FALSE  TRUE
+is.na(a)
+[1] TRUE TRUE TRUE TRUE
+```
+
+### Como o R trata missing value
+
+Quando há um `Na`envolvido em uma operação, o resultado é um `NA`. Isto ocorre, porque os dados envolvidos não estão definidos.
+
+```
+> a <- c(1,2,3,NA)
+> mean(a)
+[1] NA
+> 5 + NA
+[1] NA
+```
+
+Em muitas funções do R há o arumento `na.rm=`, que recebe um valor lógico `TRUE` ou `FALSE`, se for atribuído o valor `TRUE` os elemetos `NA` não são considerados.
+
+```
+> a <- c(1,2,3,NA)
+> mean(a)
+[1] NA
+> mean(a, na.rm = TRUE)
+[1] 2
+```
+
+Em uma operação relacional `==`, `>`, `>=`, `<` , `<=` ou `!=`, quando um dos operandos é `NA`, o resultado é um `NA`. Assim, para verificar se um valor `x` é `NA` não use `x == NA`, use `is.na(x)`.  
+
+Há análises no R que só atuam em um conjunto de dados completos, logo exitindo, ao menos um, `NA` na observação, essa é excluída da análise. Observe o resultado da análise de regressão. Na análise de regressão, abaixo, das 153 observações, 37 foram eleiminadas porque apresentavam `NA` na variável dependente `Ozone`.
+
+```
+# As observações com NA em Ozone e Wind são eliminadas
+# da análise.
+
+> fit <- lm(Ozone ~ Wind, data = airquality)
+> summary(fit) 
+
+Call:
+lm(formula = Ozone ~ Wind, data = airquality)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-51.572 -18.854  -4.868  15.234  90.000 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  96.8729     7.2387   13.38  < 2e-16 ***
+Wind         -5.5509     0.6904   -8.04 9.27e-13 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 26.47 on 114 degrees of freedom
+  (37 observations deleted due to missingness)
+Multiple R-squared:  0.3619,	Adjusted R-squared:  0.3563 
+F-statistic: 64.64 on 1 and 114 DF,  p-value: 9.272e-13
+
+```
+
+## Conceitos de MCAR, MAR e MNAR
+
+Rubin (1976) classificou os problemas de dados perdidos em três categorias. Em sua teoria, cada ponto de dados tem alguma probabilidade de ser ausente. O processo que governa essas probabilidades é chamado de *missing data mechanism* or *response mechanism*. Os processo apresentados são:
+
++ MCAR (*missing completely at random*)
++ MAR (*missing at random*)
++ MNAR (*missing not at random*)
+
+
+### MCAR
+
+O processo MCAR  ocorre se a probabilidade de ocorrer um missing value é a mesma para todos os casos.
+ 
+Isso implica efetivamente que as causas dos missing values não estão relacionadas aos dados. Consequentemente, podemos ignorar muitas das
+ complexidades que surgem devido à falta de dados, além da óbvia perda de informações. Exemplo de MCAR
+
+1. Uma balança que ficou sem baterias, alguns dados serão perdidos simplesmente por falta de sorte.
+
+2. Em uma amostra aleatória, onde cada membro tem a mesma chance de ser incluído na amostra. Os dados (não observados) de membros da população.
+
+Embora seja conveniente, o MCAR geralmente  não é realista para os dados disponíveis.
+
+### MAR
+
+O processo MAR ocorre a probabilidade de ser missing values é a mesma apenas dentro de grupos definidos por dados observados.
+
+MAR é uma classe muito mais ampla do que MCAR. Por exemplo, 
+
+
+1. Uma balanças colocada  em uma superfície macia pode, produzir mais missing values do que quando colocada em uma superfície rígida. Se, entretanto, sabemos o tipo de superfície e se podemos assumir MCAR dentro do tipo de superfície, então os dados são MAR.
+
+2. Ao tomar uma amostra de uma população, onde a probabilidade de ser incluída depende de alguma propriedade conhecida.
+
+MAR é mais geral e mais realista do que MCAR. Os métodos modernos de dados perdidos geralmente partem do pressuposto MAR.
+
+### MNAR
+
+O processco MNAR ocorre se os processos **MCAR**  e  **MAR** não forem válidos.
+
+MNAR significa que a probabilidade de estar perdido varia por motivos que desconhecemos. Por exemplo:
+
+1. O mecanismo da balança de pesagem pode se desgastar ao longo do tempo, produzindo mais dados perdidos conforme o tempo passa, mas podemos deixar de notar isso. Se os objetos mais pesados forem medidos posteriormente, obteremos uma distribuição  das medições que será distorcida. 
+
+MNAR inclui a possibilidade de que a escala produza mais valores ausentes para os objetos mais pesados , uma situação que pode
+ ser difícil de reconhecer e controlar. 
+ 
+Um exemplo de MNAR em pesquisas de opinião pública ocorre se aqueles com opiniões mais fracas respondem com menos frequência. 
+
+MNAR é o caso mais complexo. As estratégias para lidar com o MNAR são encontrar mais dados sobre as causas da falta ou realizar análises hipotéticas para ver o quão sensíveis são  os resultados em vários cenários. 
+
+A distinção de Rubin é importante para entender por que alguns métodos não funcionam. Sua teoria estabelece as condições sob as quais um método  de dados ausentes pode fornecer inferências estatísticas válidas. A maioria das correções simples funciona apenas sob a suposição MCAR restritiva e freqüentemente irreal. Se MCAR for implausível, tais métodos podem fornecer estimativas viesadas.
+
+
+<!-- You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods). -->
+
+<!-- Figures and tables with captions will be placed in `figure` and `table` environments, respectively. -->
+
+<!-- ```{r nice-fig, fig.cap='Here is a nice figure!', out.width=80%', fig.asp=.75, fig.align='center'} -->
+<!-- par(mar = c(4, 4, .1, .1)) -->
+<!-- plot(pressure, type = 'b', pch = 19) -->
+<!-- ``` -->
+
+<!-- Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab). -->
+
+<!-- ```{r nice-tab, tidy=FALSE} -->
+<!-- knitr::kable( -->
+<!--   head(iris, 20), caption = 'Here is a nice table!', -->
+<!--   booktabs = TRUE -->
+<!-- ) -->
+<!-- ``` -->
+
+<!-- You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015]. -->

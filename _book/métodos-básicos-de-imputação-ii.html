@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | Missing value: uma apostila.</title>
+  <title>Capítulo 3 Métodos Básicos de Imputação - II | Missing value: uma apostila.</title>
   <meta name="description" content="Está apostila é um conjunto de textos e de atividades práticas que compõem o curso on-line de Missing Value oferecido pela Inferir Consultoria." />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | Missing value: uma apostila." />
+  <meta property="og:title" content="Capítulo 3 Métodos Básicos de Imputação - II | Missing value: uma apostila." />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | Missing value: uma apostila." />
+  <meta name="twitter:title" content="Capítulo 3 Métodos Básicos de Imputação - II | Missing value: uma apostila." />
   
   <meta name="twitter:description" content="Está apostila é um conjunto de textos e de atividades práticas que compõem o curso on-line de Missing Value oferecido pela Inferir Consultoria." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="métodos-básicos-de-imputação-ii.html"/>
-
+<link rel="prev" href="métodos-básicos-de-imputação.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/header-attrs-2.4/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -187,17 +187,76 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
+<div id="métodos-básicos-de-imputação---ii" class="section level1" number="3">
+<h1><span class="header-section-number">Capítulo 3</span> Métodos Básicos de Imputação - II</h1>
+<div id="métodos-básicos-ii" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Métodos Básicos II</h2>
+<div id="stochastic-regression-inputation" class="section level3" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Stochastic regression inputation</h3>
+<p>A imputação de regressão estocástica é um refinamento da imputação de regressão que adiciona ruído às previsões. Isso terá um efeito descendente na correlação.
+Podemos imputar o ozônio por imputação de regressão estocástica como:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="métodos-básicos-de-imputação-ii.html#cb18-1" aria-hidden="true"></a>imp &lt;-<span class="st"> </span><span class="kw">mice</span> (airquality [, <span class="dv">1</span><span class="op">:</span><span class="st"> </span><span class="dv">2</span>], </span>
+<span id="cb18-2"><a href="métodos-básicos-de-imputação-ii.html#cb18-2" aria-hidden="true"></a>             <span class="dt">method =</span> <span class="st">&quot;norm.nob&quot;</span>, <span class="dt">m =</span> <span class="dv">1</span>, <span class="dt">maxit =</span> <span class="dv">1</span>, <span class="dt">seed =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## 
+##  iter imp variable
+##   1   1  Ozone  Solar.R</code></pre>
+<p>O argumento method = “norm.nob” requer um método de regressão estocástica simples, não bayesiana. Este método primeiro estima a interceptação, a inclinação e a
+variância residual sob o modelo linear e, em seguida, gera o valor imputado de acordo com essas especificações.</p>
+<p>Voltaremos aos detalhes na Seção 3.2. O argumento da semente torna a solução reproduzível. A Figura 1.3 mostra os resultados. A adição de ruído às previsões abre
+a distribuição dos valores imputados, conforme pretendido. Observe que algumas novas complexidades surgem. Existem várias imputações com valores negativos.
+Esses valores são implausíveis, uma vez que não existem concentrações negativas de ozônio no mundo real. Além disso, o limite superior da distribuição não é bem coberto.
+A causa disso é que a relação nos dados observados é um tanto heterocedástica. A variabilidade do ozônio parece aumentar até o nível de radiação solar de 250 langleys,
+e diminui depois disso. Embora seja</p>
+<p>Figura 1.4: Imputação de ozônio pela última observação realizada (LOCF).</p>
+<p>não está claro se este é um fenômeno meteorológico genuíno, o modelo de imputação não levou em consideração esse recurso. A imputação de regressão estocástica é um passo importante à frente.
+Em particular, preserva não só os pesos da regressão, mas também a correlação entre as variáveis (cf. Exercício 3). A imputação de regressão estocástica não resolve todos os problemas e há
+muitas sutilezas que precisam ser abordadas. No entanto, a ideia principal de retirar os resíduos é muito poderosa e forma a base de técnicas de imputação mais avançadas.</p>
+</div>
+<div id="locf-e-bocf" class="section level3" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> LOCF e BOCF</h3>
+<p>A última observação realizada (LOCF) e a observação da linha de base realizada (BOCF) requerem dados longitudinais. A ideia é tomar o último valor observado como um substituto para os dados ausentes.
+A Figura 1.4 ilustra o método aplicado aos primeiros 80 dias da série do Ozônio. Os trechos de pontos vermelhos indicam as imputações. LOCF é conveniente porque gera um conjunto de dados completo.
+O método é usado em ensaios clínicos. A Food and Drug Administration (FDA) dos EUA tem tradicionalmente visto LOCF como o método de análise preferido, considerando-o conservador e menos sujeito à
+seleção do que à exclusão por lista. No entanto, Molenberghs e Kenward (2007, pp. 47-50) mostram que o viés pode operar em ambas as direções, e que LOCF pode produzir estimativas enviesadas mesmo sob MCAR.
+LOCF precisa ser seguido por um método de análise estatística adequado que distingue entre os dados reais e imputados. Isso normalmente não é feito, no entanto. Preocupações adicionais sobre uma reversão da
+direção do tempo são fornecidas em Kenward e Molenberghs (2009).</p>
+<p>O Painel sobre Tratamento de Dados Perdidos em Ensaios Clínicos recomenda que LOCF e BOCF não sejam usados ​​como a abordagem primária para lidar com dados ausentes,
+a menos que as suposições que os sustentam sejam cientificamente justificadas (National Research Council, 2010, p. 77).</p>
+</div>
+<div id="indicator-method" class="section level3" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Indicator method</h3>
+<p>Suponha que desejemos ajustar uma regressão, mas há valores ausentes em uma das variáveis ​​explicativas. O método do indicador (Miettinen, 1985, p. 232) substitui cada
+valor ausente por um zero e estende o modelo de regressão pelo indicador de resposta. O procedimento é aplicado a cada variável incompleta. O usuário analisa o modelo
+estendido em vez do original. Este método é popular em saúde pública e epidemiologia. Uma vantagem é que o método do indicador retém o conjunto de dados completo.
+Além disso, permite diferenças sistemáticas entre os dados observados e não observados pela inclusão do indicador de resposta. No entanto, o método pode produzir
+estimativas de regressão severamente enviesadas, mesmo sob MCAR e para pequenas quantidades de dados ausentes (Vach e Blettner, 1991; Greenland e Finkle, 1995; Knol et al., 2010).
+Por outro lado, White e Thompson (2005) apontam que o método pode ser útil para estimar o efeito do tratamento em ensaios randomizados quando uma covariável de linha de base é parcialmente observada.
+Se os dados ausentes forem restritos à covariável, se o interesse for exclusivamente restrito à estimativa do efeito do tratamento, se a conformidade com o tratamento alocado for perfeita e se o modelo for linear sem interações,
+então o uso do método do indicador para essa covariável resulta em um estimativa não enviesada do efeito do tratamento. Isso é verdade mesmo se a falta depender da própria covariável.
+As condições sob as quais o método do indicador funciona são freqüentemente difíceis de alcançar na prática. O método não permite a perda de dados nos resultados, os quais ocorrem com frequência em dados reais.
+Embora o método do indicador possa ser adequado em alguns casos especiais, ele é insuficiente como uma forma geral de tratar dados ausentes.</p>
+</div>
+<div id="resumo" class="section level3" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> Resumo</h3>
+<p>A Tabela 1.1 fornece um resumo dos métodos discutidos nesta seção. A tabela aborda dois tópicos: se o método produz os resultados corretos em média (imparcialidade) e se produz o erro padrão correto.
+A imparcialidade é avaliada em relação à média, ao peso da regressão (da regressão com a variável incompleta como dependente) e à correlação.
+A tabela identifica as suposições sobre o mecanismo de dados perdidos que cada método deve fazer para produzir estimativas imparciais. Ambos os métodos de exclusão sempre requerem MCAR.
+Além disso, para exclusão listwise, há dois casos especiais MNAR (cf. Seção 2.6). A imputação de regressão e a imputação de regressão estocástica podem gerar estimativas não enviesadas sob MAR.
+Para funcionar, o modelo precisa ser especificado corretamente. LOCF e o método do indicador são incapazes de fornecer estimativas consistentes, mesmo sob MCAR.
+A exclusão listwise produz erros padrão que são corretos para o subconjunto de casos completos, mas em geral são muito grandes para todo o conjunto de dados.
+O cálculo dos erros padrão na exclusão de pares é complicado. Os erros padrão após a imputação são muito pequenos, uma vez que os cálculos padrão não fazem distinção entre os dados observados e os dados imputados.
+Fatores de correção para algumas situações foram desenvolvidos (Schafer e Schenker, 2000), mas uma solução mais conveniente é a imputação múltipla.</p>
 
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="métodos-básicos-de-imputação-ii.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="métodos-básicos-de-imputação.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
