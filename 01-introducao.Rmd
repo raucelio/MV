@@ -138,22 +138,39 @@ Um exemplo de MNAR em pesquisas de opinião pública ocorre se aqueles com opini
 MNAR é o caso mais complexo. As estratégias para lidar com o MNAR são encontrar mais dados sobre as causas da falta ou realizar análises hipotéticas para ver o quão sensíveis são  os resultados em vários cenários. 
 
 
-<!-- You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods). -->
+### Exemplo 1
 
-<!-- Figures and tables with captions will be placed in `figure` and `table` environments, respectively. -->
+Considere duas variáveis contínuas, uma sujeita a não-resposta. Suponha que X ═ idade e Y ═ renda.
 
-<!-- ```{r nice-fig, fig.cap='Here is a nice figure!', out.width=80%', fig.asp=.75, fig.align='center'} -->
-<!-- par(mar = c(4, 4, .1, .1)) -->
-<!-- plot(pressure, type = 'b', pch = 19) -->
-<!-- ``` -->
+Se a probabilidade que a renda seja observada é a mesma para todos os
+indivíduos, independente de sua idade ou renda, então os dados são MCAR.
 
-<!-- Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab). -->
+Se a probabilidade que a renda seja observada varia de acordo com a idade do indivíduo mas não varia de acordo com sua renda, então os dados são MAR. 
 
-<!-- ```{r nice-tab, tidy=FALSE} -->
-<!-- knitr::kable( -->
-<!--   head(iris, 20), caption = 'Here is a nice table!', -->
-<!--   booktabs = TRUE -->
-<!-- ) -->
-<!-- ``` -->
+Mas, se a probabilidade de que a renda seja observada varia de acordo com a própria renda (geralmente a perda é maior entre as pessoas que possuem renda mais alta), então os dados são NMAR. Neste caso, a não-resposta depende dos dados ausentes <!---(Little e Rubin, 1987) ---> e, portanto, a falta de especificação de um modelo para a não-resposta evidentemente vicia a análise estatística.
 
-<!-- You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015]. -->
+### Exemplo 2 
+
+Em [@Eekhout2015DontMO] exemplifica os processos de geração de *missing values*. Nessa tabela são apresentados a idade e o QI de doze indivíduos. A colunas MCAR, MAR e MNAR são valores para a variável QI, caso determinado processo ocorresse.
+
+
+idade | QI | MCAR | MAR | MNAR
+------|----|------|-----|------
+25    |133 |`NA`  |`NA` | 123
+26    |121 |121   |`NA` | 121
+29    | 91 | 91   |`NA` | `NA`
+30    |105 |`NA`  |`NA` | `NA`
+30    |110 |110   |`NA` | 110
+31    | 98 |`NA`  |`NA` | `NA`
+44    |118 |118   |118  | 118
+56    | 93 | 93   |93   | `NA`
+48    |141 |`NA`  |141  | 141
+51    |104 |`NA`  |104  | `NA`
+51    |116 |116   |116  | 116
+54    | 97 |`NA`  | 97  | `NA`
+
+1. **MCAR** - Não há nenhum padrão na ocorrência de  **missing values**. Considere que os questionários foram perdidos pelos correios.
+
+2. **CAR** - os respondentes mais novos não informaram o valor do **QI**. Atente para o fato: os **missing values** na variável **QI** estão relacionados com a variável **idade**. 
+
+3. MNAR - Os respondentes com **QI** mais baixo são `NA`. As origens dos `NA` na variável **QI** é influênciada pela variável **QI**. 
