@@ -43,11 +43,14 @@ A *pairwise deletions*, também conhecida como análise de caso disponível, ten
 
 O método calcula as médias e (co) variâncias para  todos os dados observados disponíveis. Assim, a média da variável X é baseada em todos os casos com dados observados em X, a média da variável Y usa todos os casos com valores de Y observados.  Para a correlação e covariância, todos os dados são considerados nos quais X e Y não são `NA`. Posteriormente, a matriz  é alimentada em um programa para análise de regressão, análise fatorial ou outros procedimentos de modelagem. 
 
-Podemos calcular a média, covariâncias e correlações dos dados de qualidade aérea sob exclusão de pares em R como:
+Podemos calcular as covariâncias e as correlações dos dados no data frame airquality pelo proceddimento  *pairwise deletions* no R como:
 
-> mean(airquality, na.rm = TRUE)
-> cor(airquality, use = "pair") 
-> cov(airquality, use = "pair")
+```{r}
+a <- cor(airquality, use = "pair") 
+print(a, digits = 3)
+a <-cov(airquality, use = "pair")
+print(a,digits = 3)
+```
 
 
 O método é simples, usa todas as informações disponíveis e produz estimativas consistentes de média, correlações e covariâncias sob MCAR <!--- (Little e Rubin, 2002, p. 55)--->. No entanto, quando consideradas em  conjunto, essas estimativas apresentam deficiências importantes. As estimativas podem ser tendenciosas  se os dados não forem MCAR.  Além disso, existem problemas computacionais. A matriz de correlação pode não ser definida positivamente, o que é um requisito para a maioria procedimentos multivariados. Podem ocorrer correlações fora do intervalo [-1, + 1], um problema que vem de diferentes subconjuntos usados para as covariâncias e as variâncias.
@@ -61,32 +64,22 @@ por trás da exclusão aos pares é usar todas as informações disponíveis. Em
 
 A *mean imputation* é substituir o `NA` em uma variável pela média dos valores observados. No caso da variável ser categórica, o valor `NA` pode ser substituído pela moda.
 
-Uma solução rápida para os dados ausentes é substituí-los pela média. Podemos usar a moda para dados categóricos.   
-
-O  pacote R `mice` (Van Buuren e Groothuis-Oudshoorn, 2011) implementa a *mean imputation *. Seja o dataset `airquality`, para  imputar a média nas variáveis  `Ozone` e `Solar.R`  pode ser feito por
-
-```{r}
-library(mice)
-imp <- mice(airquality, method = "mean", m = 1, maxit = 1) 
-      
-```         
-onde 
-
-+ method = "mean" - especifica a imputação média;
-+ m = 1 solicita um único conjunto de dados imputado; e 
-+ maxit = 1 define o número de iterações para 1 (sem iteração).
-
-A imputação média distorce a distribuição de várias maneiras. A Figura 1.1 mostra a distribuição da `Ozone` após a imputação. 
 
 ```{r fig.align='center', fig.asp=.75, fig.cap='Dados Observados e imputados', message=FALSE, warning=FALSE, out.width='80%'}
+
 library(ggplot2)
+
 dados_observados <- data.frame(observado = na.omit(airquality$Ozone))
-dados_imputados  <- data.frame(imputado = imp$imp$Ozone)
+
+num_missing <- sum(is.na(airquality$Ozone))
+
+dados_imputados  <- data.frame(imputado = rep(mean(airquality$Ozone,na.rm=T),
+                                              num_missing))
 
 ggplot()+
   geom_histogram(data = dados_observados, aes(x=observado), 
                  bins = 15, fill="blue", alpha = 0.5)+
-  geom_histogram(data = dados_imputados, aes(x=X1),
+  geom_histogram(data = dados_imputados, aes(x=imputado),
                  bins = 15, fill = "red", alpha = 0.5)+
   labs(x = "Valores da variável Ozone",
        y = "Frequência")
@@ -139,7 +132,7 @@ ggplot()+
 
 A imputação média é uma solução rápida e simples para os *missing values*. No entanto, subestima a variância, altera as relações entre as variáveis, enviesar quase qualquer estimativa diferente da média e enviesar a estimativa da média quando os dados não são MCAR.
 
-A imputação média talvez deva ser usada apenas como uma correção rápida quando um punhado de valores está faltando, e deve ser evitada em geral.
+A imputação média talvez deva ser usada apenas como uma correção rápida e deve ser evitada em geral.
 
 ### Regression imputation
 
@@ -150,22 +143,16 @@ Suponha que modelamos `Ozone` pela função de regressão linear de `Solar.R`.
 
 ```{r}
 fit      <- lm (Ozone ~ Solar.R, data = airquality)
-pred  <- predict (fit, newdata = ic (airquality))
-pred  <- data.frame (Ozone_imputado=pred, ic(airquality) )
+summary(fit)
+pred  <- predict (fit, newdata = airquality[is.na(airquality$Ozone), ])
+pred  <- data.frame (Ozone_imputado=pred, airquality[is.na(airquality$Ozone), ] )
 pred  <- pred[!is.na(Ozone_imputado), ]
 ```
 
 ```{r fig.align='center', fig.asp=.75, fig.cap='Regression imputation entre Ozone e Solar.R',  message=FALSE, warning=FALSE, out.width='80%'}
-
-
 dados <- na.omit(airquality[,c("Ozone", "Solar.R")])
-
 dados_observados <- data.frame(dados)
-
-
 Ozone_imputado <- pred
-
-
 
 ggplot()+
   geom_point(data = dados_observados, aes(y=Ozone, x=Solar.R), 
@@ -175,8 +162,6 @@ ggplot()+
              color = "red", alpha = 0.5)+
   labs(y = "Variável Ozone",
        x = "Variável Solar.R")
-
-
 ```
 
 

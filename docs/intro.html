@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="multiple-imputation-in-a-nutshell.html"><a href="multiple-imputation-in-a-nutshell.html"><i class="fa fa-check"></i><b>5</b> Multiple imputation in a nutshell</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="referências.html"><a href="referências.html"><i class="fa fa-check"></i>Referências</a></li>
 <li class="divider"></li>
 <li><a href="https://inferir.com.br/" target="blank">Inferir Consultoria</a></li>
 
@@ -212,8 +212,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>## [1] Inf Inf Inf NaN</code></pre>
 <p>A função <code>is.na(x)</code> retorna um vetor do mesmos tamanho do vetor x, com valor <code>TRUE</code> na mesma posição onde se encontra um <code>NA</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="intro.html#cb9-1" aria-hidden="true"></a>a &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">4</span>, <span class="ot">NA</span>, <span class="dv">8</span>, <span class="ot">NA</span>)</span>
-<span id="cb9-2"><a href="intro.html#cb9-2" aria-hidden="true"></a>a</span></code></pre></div>
-<pre><code>## [1]  4 NA  8 NA</code></pre>
+<span id="cb9-2"><a href="intro.html#cb9-2" aria-hidden="true"></a><span class="kw">is.na</span>(a)</span></code></pre></div>
+<pre><code>## [1] FALSE  TRUE FALSE  TRUE</code></pre>
 <p>A função <code>is.nan(x)</code> retorna um vetor do mesmos tamanho do vetor x, com valor <code>TRUE</code> na mesma posição onde se encontra um <code>NaN</code>. No exemplo seguinte, observa-se que <code>is.na(x)</code> retorna <code>TRUE</code> quando encontra um <code>NaN</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="intro.html#cb11-1" aria-hidden="true"></a>a &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">Inf</span><span class="op">-</span><span class="ot">Inf</span>, <span class="dv">0</span><span class="op">/</span><span class="dv">0</span>, <span class="ot">NA</span>, <span class="ot">NaN</span>)</span>
 <span id="cb11-2"><a href="intro.html#cb11-2" aria-hidden="true"></a><span class="kw">is.nan</span>(a)</span></code></pre></div>
@@ -434,7 +434,7 @@ indivíduos, independente de sua idade ou renda, então os dados são MCAR.</p>
 </div>
 </div>
 </div>
-<h3>References</h3>
+<h3>Referências</h3>
 <div id="refs" class="references">
 <div id="ref-Eekhout2015DontMO">
 <p>Eekhout, I. 2015. “Don’t Miss Out!: Incomplete Data Can Contain Valuable Information.” In.</p>

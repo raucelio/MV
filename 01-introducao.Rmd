@@ -28,7 +28,7 @@ A função `is.na(x)` retorna um vetor do mesmos tamanho  do vetor x, com valor 
 
 ```{r}
 a <- c(4, NA, 8, NA)
-a
+is.na(a)
 ```
 
 A função `is.nan(x)` retorna um vetor do mesmos tamanho  do vetor x, com valor `TRUE` na mesma posição onde se encontra um  `NaN`. No exemplo seguinte, observa-se que `is.na(x)` retorna `TRUE` quando encontra um `NaN`.
