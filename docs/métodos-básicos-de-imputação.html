@@ -24,7 +24,7 @@
 <meta name="author" content="Inferir Estatística" />
 
 
-<meta name="date" content="2020-10-13" />
+<meta name="date" content="2020-10-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="intro.html"/>
-<link rel="next" href="métodos-básicos-de-imputação-ii.html"/>
+<link rel="next" href="multiple-imputation.html"/>
 <script src="libs/header-attrs-2.4/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -158,18 +158,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.1.3" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#pairwise-deletion"><i class="fa fa-check"></i><b>3.1.3</b> Pairwise deletion</a></li>
 <li class="chapter" data-level="3.1.4" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#mean-imputation"><i class="fa fa-check"></i><b>3.1.4</b> Mean imputation</a></li>
 <li class="chapter" data-level="3.1.5" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#regression-imputation"><i class="fa fa-check"></i><b>3.1.5</b> Regression imputation</a></li>
+<li class="chapter" data-level="3.1.6" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#stochastic-regression-imputation"><i class="fa fa-check"></i><b>3.1.6</b> Stochastic regression imputation</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="métodos-básicos-de-imputação-ii.html"><a href="métodos-básicos-de-imputação-ii.html"><i class="fa fa-check"></i><b>4</b> Métodos Básicos de Imputação - II</a>
+<li class="chapter" data-level="4" data-path="multiple-imputation.html"><a href="multiple-imputation.html"><i class="fa fa-check"></i><b>4</b> Multiple imputation</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="métodos-básicos-de-imputação-ii.html"><a href="métodos-básicos-de-imputação-ii.html#métodos-básicos-ii"><i class="fa fa-check"></i><b>4.1</b> Métodos Básicos II</a>
+<li class="chapter" data-level="4.1" data-path="multiple-imputation.html"><a href="multiple-imputation.html#multiple-imputation-1"><i class="fa fa-check"></i><b>4.1</b> Multiple imputation</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="métodos-básicos-de-imputação-ii.html"><a href="métodos-básicos-de-imputação-ii.html#stochastic-regression-inputation"><i class="fa fa-check"></i><b>4.1.1</b> Stochastic regression inputation</a></li>
-<li class="chapter" data-level="4.1.2" data-path="métodos-básicos-de-imputação-ii.html"><a href="métodos-básicos-de-imputação-ii.html#locf-e-bocf"><i class="fa fa-check"></i><b>4.1.2</b> LOCF e BOCF</a></li>
-<li class="chapter" data-level="4.1.3" data-path="métodos-básicos-de-imputação-ii.html"><a href="métodos-básicos-de-imputação-ii.html#indicator-method"><i class="fa fa-check"></i><b>4.1.3</b> Indicator method</a></li>
+<li class="chapter" data-level="4.1.1" data-path="intro.html"><a href="intro.html#exemplo-1"><i class="fa fa-check"></i><b>4.1.1</b> Exemplo 1</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="multiple-imputation-in-a-nutshell.html"><a href="multiple-imputation-in-a-nutshell.html"><i class="fa fa-check"></i><b>5</b> Multiple imputation in a nutshell</a></li>
 <li class="chapter" data-level="" data-path="referências.html"><a href="referências.html"><i class="fa fa-check"></i>Referências</a></li>
 <li class="divider"></li>
 <li><a href="https://inferir.com.br/" target="blank">Inferir Consultoria</a></li>
@@ -367,6 +365,62 @@ modelo de imputação se as variáveis explicativas forem completas.</p>
 <!---O grau de subestimação depende da variância explicada e da proporção de casos ausentes (Little e Rubin, 2002, p. 64).---></p>
 <p>A imputação de valores preditos pode produzir imputações realistas se a predição estiver próxima da perfeição. Nesse caso, o método reconstrói as partes que faltam a partir dos dados disponíveis.</p>
 <!--Em essência, não havia realmente nenhuma informação faltando em primeiro lugar, ela estava apenas codificada de uma forma diferente. É improvável que esse tipo de dados ausentes apareça na maioria dos aplicativos. --->
+</div>
+<div id="stochastic-regression-imputation" class="section level3" number="3.1.6">
+<h3><span class="header-section-number">3.1.6</span> Stochastic regression imputation</h3>
+<p><em>Stochastic regression imputation</em>, imputação de regressão estocástica, é um refinamento da imputação de regressão que adiciona ruído às previsões. Isso terá um efeito descendente na correlação. Podemos imputar valores a variaável <code>Ozone</code> por <em>Stochastic regression imputation</em> com o código:</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="métodos-básicos-de-imputação.html#cb45-1" aria-hidden="true"></a><span class="kw">library</span>(mice)</span>
+<span id="cb45-2"><a href="métodos-básicos-de-imputação.html#cb45-2" aria-hidden="true"></a>imp &lt;-<span class="st"> </span><span class="kw">mice</span> (airquality [, <span class="dv">1</span><span class="op">:</span><span class="st"> </span><span class="dv">2</span>], </span>
+<span id="cb45-3"><a href="métodos-básicos-de-imputação.html#cb45-3" aria-hidden="true"></a>             <span class="dt">method =</span> <span class="st">&quot;norm.nob&quot;</span>, </span>
+<span id="cb45-4"><a href="métodos-básicos-de-imputação.html#cb45-4" aria-hidden="true"></a>             <span class="dt">m =</span> <span class="dv">1</span>, </span>
+<span id="cb45-5"><a href="métodos-básicos-de-imputação.html#cb45-5" aria-hidden="true"></a>             <span class="dt">maxit =</span> <span class="dv">1</span>, </span>
+<span id="cb45-6"><a href="métodos-básicos-de-imputação.html#cb45-6" aria-hidden="true"></a>             <span class="dt">seed =</span> <span class="dv">1</span>, </span>
+<span id="cb45-7"><a href="métodos-básicos-de-imputação.html#cb45-7" aria-hidden="true"></a>             <span class="dt">printFlag =</span> F)</span></code></pre></div>
+<p>onde</p>
+<ul>
+<li><p>method = “norm.nob” requer um método de regressão estocástica simples. Este método estima a intercepto, a inclinação, a variância residual e, em seguida, gera o valor imputado de acordo com essas especificações.</p></li>
+<li><p>seed = 1 torna a solução reproduzível.</p></li>
+</ul>
+<p>O gráfico abaixo apresenta os valores imputados por <em>Stochastic regression imputation</em>, os pontos vermelhos são os valores imputados.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="métodos-básicos-de-imputação.html#cb46-1" aria-hidden="true"></a><span class="kw">xyplot</span>(imp,  Ozone <span class="op">~</span><span class="st"> </span>Solar.R, <span class="dt">pch=</span><span class="kw">c</span>(<span class="dv">16</span>,<span class="dv">20</span>), <span class="dt">cex=</span><span class="kw">c</span>(<span class="fl">0.8</span>,<span class="fl">1.5</span>),</span>
+<span id="cb46-2"><a href="métodos-básicos-de-imputação.html#cb46-2" aria-hidden="true"></a>       <span class="dt">xlab =</span> <span class="st">&quot;Variável Solar.R&quot;</span>,</span>
+<span id="cb46-3"><a href="métodos-básicos-de-imputação.html#cb46-3" aria-hidden="true"></a>       <span class="dt">ylab =</span> <span class="st">&quot;variável Ozone&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-15"></span>
+<img src="MV_files/figure-html/unnamed-chunk-15-1.png" alt="Stochastic regression inputation entre Ozone e Solar.R" width="80%" />
+<p class="caption">
+Figure 3.4: Stochastic regression inputation entre Ozone e Solar.R
+</p>
+</div>
+<p>Observe as estatísticas descrivivas dos valores imputados:</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="métodos-básicos-de-imputação.html#cb47-1" aria-hidden="true"></a><span class="co"># Estatística Descritiva var Ozone</span></span>
+<span id="cb47-2"><a href="métodos-básicos-de-imputação.html#cb47-2" aria-hidden="true"></a>Ozone_imputado &lt;-<span class="st"> </span>imp<span class="op">$</span>imp<span class="op">$</span>Ozone</span>
+<span id="cb47-3"><a href="métodos-básicos-de-imputação.html#cb47-3" aria-hidden="true"></a><span class="kw">summary</span>(Ozone_imputado)</span></code></pre></div>
+<pre><code>##        1         
+##  Min.   :-33.19  
+##  1st Qu.: 21.81  
+##  Median : 41.34  
+##  Mean   : 41.77  
+##  3rd Qu.: 65.19  
+##  Max.   :115.46</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="métodos-básicos-de-imputação.html#cb49-1" aria-hidden="true"></a><span class="co">#Estatística Descritica var. Solar.R</span></span>
+<span id="cb49-2"><a href="métodos-básicos-de-imputação.html#cb49-2" aria-hidden="true"></a></span>
+<span id="cb49-3"><a href="métodos-básicos-de-imputação.html#cb49-3" aria-hidden="true"></a>Solar.R_imputado &lt;-<span class="st"> </span>imp<span class="op">$</span>imp<span class="op">$</span>Solar.R</span>
+<span id="cb49-4"><a href="métodos-básicos-de-imputação.html#cb49-4" aria-hidden="true"></a><span class="kw">summary</span>(Solar.R_imputado)</span></code></pre></div>
+<pre><code>##        1         
+##  Min.   : 72.92  
+##  1st Qu.:136.71  
+##  Median :199.68  
+##  Mean   :178.30  
+##  3rd Qu.:223.71  
+##  Max.   :254.65</code></pre>
+<p>A adição de ruído às previsões aumenta a variabilidade dos valores imputados. Observe:</p>
+<ol style="list-style-type: decimal">
+<li><p>Há imputações com valores negativos. Esses valores são implausíveis, uma vez que não existem concentrações negativas de ozônio no mundo real.</p></li>
+<li><p>Além disso, o limite superior da distribuição não é bem coberto. A causa disso é que a relação nos dados observados é um tanto heterocedástica. A variabilidade do ozônio parece aumentar até o nível de radiação solar de 250 langleys, e diminui depois disso.</p></li>
+<li><p>Não está claro se este é um fenômeno meteorológico genuíno, o modelo de imputação não levou isso em consideração.</p></li>
+</ol>
+<p>A <em>Stochastic regression inputation</em> preserva não só os coeficientes de uma regressão, mas também a correlação entre as variáveis .</p>
+<p>A <em>Stochastic regression inputation</em> não resolve todos os problemas e há muitas sutilezas que precisam ser abordadas, entretanto e forma a base de técnicas de imputação mais avançadas.</p>
 
 </div>
 </div>
@@ -377,7 +431,7 @@ modelo de imputação se as variáveis explicativas forem completas.</p>
         </div>
       </div>
 <a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="métodos-básicos-de-imputação-ii.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="multiple-imputation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -427,6 +481,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

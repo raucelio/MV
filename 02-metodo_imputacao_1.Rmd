@@ -179,3 +179,63 @@ No exemplo, isso corresponde à situação em que Solar.R explicaria quaisquer d
 
 <!--Em essência, não havia realmente nenhuma informação faltando em primeiro lugar, ela estava apenas codificada de uma forma diferente. É improvável que esse tipo de dados ausentes apareça na maioria dos aplicativos. --->
 
+### Stochastic regression imputation
+
+*Stochastic regression imputation*, imputação de regressão estocástica, é um refinamento da imputação de regressão que adiciona ruído às previsões. Isso terá um efeito descendente na correlação. Podemos imputar valores a variaável `Ozone`  por *Stochastic regression imputation* com o código:
+
+```{r message=FALSE, warning=FALSE}
+library(mice)
+imp <- mice (airquality [, 1: 2], 
+             method = "norm.nob", 
+             m = 1, 
+             maxit = 1, 
+             seed = 1, 
+             printFlag = F)
+
+```
+
+onde 
+
++ method = "norm.nob" requer um método de regressão estocástica simples. Este método  estima a intercepto, a inclinação, a variância residual e, em seguida, gera o valor imputado de acordo com essas especificações. 
+
++ seed = 1 torna a solução reproduzível. 
+
+
+O gráfico abaixo apresenta os valores imputados por *Stochastic regression imputation*, os pontos vermelhos são os valores imputados.
+
+
+```{r fig.align='center', fig.asp=.75, fig.cap='Stochastic regression inputation entre Ozone e Solar.R',  message=FALSE, warning=FALSE, out.width='80%'}
+
+xyplot(imp,  Ozone ~ Solar.R, pch=c(16,20), cex=c(0.8,1.5),
+       xlab = "Variável Solar.R",
+       ylab = "variável Ozone")
+
+```
+
+Observe as estatísticas descrivivas dos valores imputados:
+
+```{r}
+
+# Estatística Descritiva var Ozone
+Ozone_imputado <- imp$imp$Ozone
+summary(Ozone_imputado)
+
+#Estatística Descritica var. Solar.R
+
+Solar.R_imputado <- imp$imp$Solar.R
+summary(Solar.R_imputado)
+
+```
+
+
+A adição de ruído às previsões aumenta a variabilidade dos valores imputados. Observe:
+
+1. Há imputações com valores negativos. Esses valores são implausíveis, uma vez que não existem concentrações negativas de ozônio no mundo real.
+
+2. Além disso, o limite superior da distribuição não é bem coberto.  A causa disso é que a relação nos dados observados é um tanto heterocedástica. A variabilidade do ozônio parece aumentar até o nível de radiação solar de 250 langleys, e diminui depois disso. 
+
+3. Não está claro se este é um fenômeno meteorológico genuíno, o modelo de imputação não levou isso  em consideração.
+
+A *Stochastic regression inputation*  preserva não só os coeficientes  de uma  regressão, mas também a correlação entre as variáveis .
+
+A *Stochastic regression inputation* não resolve todos os problemas e há  muitas sutilezas que precisam ser abordadas, entretanto  e forma a base de técnicas de imputação mais avançadas.

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Capítulo 5 Multiple imputation in a nutshell | Missing value: uma apostila.</title>
+  <title>Capítulo 4 Multiple imputation | Missing value: uma apostila.</title>
   <meta name="description" content="Esta apostila é um conjunto de textos e de atividades práticas que compõem o curso on-line de Missing Value oferecido pela Inferir Consultoria." />
   <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Capítulo 5 Multiple imputation in a nutshell | Missing value: uma apostila." />
+  <meta property="og:title" content="Capítulo 4 Multiple imputation | Missing value: uma apostila." />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Capítulo 5 Multiple imputation in a nutshell | Missing value: uma apostila." />
+  <meta name="twitter:title" content="Capítulo 4 Multiple imputation | Missing value: uma apostila." />
   
   <meta name="twitter:description" content="Esta apostila é um conjunto de textos e de atividades práticas que compõem o curso on-line de Missing Value oferecido pela Inferir Consultoria." />
   
@@ -24,14 +24,14 @@
 <meta name="author" content="Inferir Estatística" />
 
 
-<meta name="date" content="2020-10-13" />
+<meta name="date" content="2020-10-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="métodos-básicos-de-imputação-ii.html"/>
+<link rel="prev" href="métodos-básicos-de-imputação.html"/>
 <link rel="next" href="referências.html"/>
 <script src="libs/header-attrs-2.4/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -158,18 +158,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.1.3" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#pairwise-deletion"><i class="fa fa-check"></i><b>3.1.3</b> Pairwise deletion</a></li>
 <li class="chapter" data-level="3.1.4" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#mean-imputation"><i class="fa fa-check"></i><b>3.1.4</b> Mean imputation</a></li>
 <li class="chapter" data-level="3.1.5" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#regression-imputation"><i class="fa fa-check"></i><b>3.1.5</b> Regression imputation</a></li>
+<li class="chapter" data-level="3.1.6" data-path="métodos-básicos-de-imputação.html"><a href="métodos-básicos-de-imputação.html#stochastic-regression-imputation"><i class="fa fa-check"></i><b>3.1.6</b> Stochastic regression imputation</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="métodos-básicos-de-imputação-ii.html"><a href="métodos-básicos-de-imputação-ii.html"><i class="fa fa-check"></i><b>4</b> Métodos Básicos de Imputação - II</a>
+<li class="chapter" data-level="4" data-path="multiple-imputation.html"><a href="multiple-imputation.html"><i class="fa fa-check"></i><b>4</b> Multiple imputation</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="métodos-básicos-de-imputação-ii.html"><a href="métodos-básicos-de-imputação-ii.html#métodos-básicos-ii"><i class="fa fa-check"></i><b>4.1</b> Métodos Básicos II</a>
+<li class="chapter" data-level="4.1" data-path="multiple-imputation.html"><a href="multiple-imputation.html#multiple-imputation-1"><i class="fa fa-check"></i><b>4.1</b> Multiple imputation</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="métodos-básicos-de-imputação-ii.html"><a href="métodos-básicos-de-imputação-ii.html#stochastic-regression-inputation"><i class="fa fa-check"></i><b>4.1.1</b> Stochastic regression inputation</a></li>
-<li class="chapter" data-level="4.1.2" data-path="métodos-básicos-de-imputação-ii.html"><a href="métodos-básicos-de-imputação-ii.html#locf-e-bocf"><i class="fa fa-check"></i><b>4.1.2</b> LOCF e BOCF</a></li>
-<li class="chapter" data-level="4.1.3" data-path="métodos-básicos-de-imputação-ii.html"><a href="métodos-básicos-de-imputação-ii.html#indicator-method"><i class="fa fa-check"></i><b>4.1.3</b> Indicator method</a></li>
+<li class="chapter" data-level="4.1.1" data-path="intro.html"><a href="intro.html#exemplo-1"><i class="fa fa-check"></i><b>4.1.1</b> Exemplo 1</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="multiple-imputation-in-a-nutshell.html"><a href="multiple-imputation-in-a-nutshell.html"><i class="fa fa-check"></i><b>5</b> Multiple imputation in a nutshell</a></li>
 <li class="chapter" data-level="" data-path="referências.html"><a href="referências.html"><i class="fa fa-check"></i>Referências</a></li>
 <li class="divider"></li>
 <li><a href="https://inferir.com.br/" target="blank">Inferir Consultoria</a></li>
@@ -191,16 +189,52 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="multiple-imputation-in-a-nutshell" class="section level1" number="5">
-<h1><span class="header-section-number">Capítulo 5</span> Multiple imputation in a nutshell</h1>
+<div id="multiple-imputation" class="section level1" number="4">
+<h1><span class="header-section-number">Capítulo 4</span> Multiple imputation</h1>
+<div id="multiple-imputation-1" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Multiple imputation</h2>
+<p>A <em>multiple imputation</em> cria <span class="math inline">\(m &gt; 1\)</span> conjuntos de dados completos. Cada um desses conjuntos de dados é analisado por software de análise padrão. Os m resultados são agrupados em uma estimativa pontual <!--- final mais o erro padrão por regras de agrupamento simples ("regras de Rubin"). A Figura 1.5 ilustra as três etapas principais da imputação múltipla: imputação, análise e agrupamento. ---></p>
+<p>A análise começa com dados observados e incompletos. A <em>multiple imputation</em> cria várias versões completas dos dados, substituindo os valores ausentes por valores p lausíveis. Esses valores são extraídos de uma distribuição modelada especiﬁcamente para cada valor ausente. <!---A Figura 1.5 retrata m = 3 conjuntos de dados imputados--->.</p>
+<p>São criados m conjutos de dados que preservam todos os valores observados, mas diferem nos valores imputados. A segunda etapa é estimar os parâmetros de interesse de cada conjunto de dados imputado. Isso normalmente é feito aplicando o método analítico que teríamos usado se os dados estivessem completos. Os resultados serão diferentes porque seus dados de entrada diferem. É importante perceber que essas diferenças são causadas apenas por causa da incerteza sobre qual valor imputar. A última etapa é reunir as m estimativas do parâmetro em uma estimativa e estimar sua variância. A variância combina a variância de amostragem convencional (variância dentro da imputação) e a variância extra causada pela variância extra de dados perdidos causada pelos dados perdidos (variância entre imputação). Sob as condições apropriadas, as estimativas combinadas não são viesadas e têm as propriedades estatísticas corretas.</p>
+<div id="exemplo-1" class="section level3" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> Exemplo 1</h3>
+<p>Continuing with the airquality dataset, it is straightforward to apply multiple imputation. The following code imputes the missing data ﬁve times, ﬁts a linear regression model to predict Ozone in each of the imputed datasets, and pools the ﬁve sets of estimated parameters.</p>
+<p>Ao data frame <code>airquality</code> será aplicada a <em>multiple interations</em> para estimar os valores faltantes para as variáveis faltantes <code>Ozone</code> e <code>Solar.R</code>. Assim, serão</p>
+<ol style="list-style-type: decimal">
+<li>gerados 5 data frames com valores ;</li>
+<li>ajustados 5 modelos para predizer <code>Ozone</code>; e</li>
+<li>Combinar os valores dos parâmetros ajustados.</li>
+</ol>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="multiple-imputation.html#cb51-1" aria-hidden="true"></a><span class="kw">library</span>(mice)</span>
+<span id="cb51-2"><a href="multiple-imputation.html#cb51-2" aria-hidden="true"></a>imp &lt;-<span class="st"> </span><span class="kw">mice</span>(airquality, <span class="dt">m=</span><span class="dv">10</span>, <span class="dt">seed =</span> <span class="dv">1</span>, <span class="dt">print =</span> <span class="ot">FALSE</span>) </span>
+<span id="cb51-3"><a href="multiple-imputation.html#cb51-3" aria-hidden="true"></a>fit &lt;-<span class="st"> </span><span class="kw">with</span>(imp, <span class="kw">lm</span>(Ozone <span class="op">~</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>Temp <span class="op">+</span><span class="st"> </span>Solar.R))</span>
+<span id="cb51-4"><a href="multiple-imputation.html#cb51-4" aria-hidden="true"></a>tab &lt;-<span class="st"> </span><span class="kw">summary</span>(<span class="kw">pool</span>(fit))</span>
+<span id="cb51-5"><a href="multiple-imputation.html#cb51-5" aria-hidden="true"></a>tab[, <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dv">5</span>)] </span></code></pre></div>
+<pre><code>##          term     estimate   std.error       df
+## 1 (Intercept) -58.66106419 21.46922597 74.52340
+## 2        Wind  -3.19526446  0.62472320 68.44788
+## 3        Temp   1.56068010  0.22960947 96.72670
+## 4     Solar.R   0.06010358  0.02152663 94.74287</code></pre>
+<p>Agora, segue os resutados do mesmos modelo aplicado ao conjunto decasos completos.</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="multiple-imputation.html#cb53-1" aria-hidden="true"></a>fit &lt;-<span class="st"> </span><span class="kw">lm</span>(Ozone <span class="op">~</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>Temp <span class="op">+</span><span class="st"> </span>Solar.R, <span class="dt">data =</span> airquality, <span class="dt">na.action =</span> na.omit)</span>
+<span id="cb53-2"><a href="multiple-imputation.html#cb53-2" aria-hidden="true"></a><span class="kw">coef</span>(<span class="kw">summary</span>(fit))</span></code></pre></div>
+<pre><code>##                 Estimate  Std. Error   t value     Pr(&gt;|t|)
+## (Intercept) -64.34207893 23.05472435 -2.790841 6.226638e-03
+## Wind         -3.33359131  0.65440710 -5.094063 1.515934e-06
+## Temp          1.65209291  0.25352979  6.516366 2.423506e-09
+## Solar.R       0.05982059  0.02318647  2.579979 1.123664e-02</code></pre>
+<p>The solutions are nearly identical here, which is due to the fact that most missing values occur in the outcome variable. The standard errors of the multiple imputation solution are slightly smaller than in the complete case analysis.</p>
+<p>As soluções são próximas, devido ao fato da maioria dos <em>missing values</em> ocorrem na variável dependente. Os erros padrão gerados por <em>multiple imputqtion</em> são levemente menores que os gerados pelo modelo que usa os casos completos.</p>
 
+</div>
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="métodos-básicos-de-imputação-ii.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="métodos-básicos-de-imputação.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="referências.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
@@ -251,6 +285,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
