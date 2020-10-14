@@ -170,7 +170,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="multiple-imputation-in-a-nutshell.html"><a href="multiple-imputation-in-a-nutshell.html"><i class="fa fa-check"></i><b>5</b> Multiple imputation in a nutshell</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="referências.html"><a href="referências.html"><i class="fa fa-check"></i>Referências</a></li>
 <li class="divider"></li>
 <li><a href="https://inferir.com.br/" target="blank">Inferir Consultoria</a></li>
 
@@ -223,12 +223,25 @@ a subamostras sem sentido. Por exemplo, as observações no dataset <em>airquali
 <h3><span class="header-section-number">3.1.3</span> Pairwise deletion</h3>
 <p>A <em>pairwise deletions</em>, também conhecida como análise de caso disponível, tenta remediar o problema de perda de observações que ocorrem na <em>listwise deletion</em>.</p>
 <p>O método calcula as médias e (co) variâncias para todos os dados observados disponíveis. Assim, a média da variável X é baseada em todos os casos com dados observados em X, a média da variável Y usa todos os casos com valores de Y observados. Para a correlação e covariância, todos os dados são considerados nos quais X e Y não são <code>NA</code>. Posteriormente, a matriz é alimentada em um programa para análise de regressão, análise fatorial ou outros procedimentos de modelagem.</p>
-<p>Podemos calcular a média, covariâncias e correlações dos dados de qualidade aérea sob exclusão de pares em R como:</p>
-<blockquote>
-<p>mean(airquality, na.rm = TRUE)
-cor(airquality, use = “pair”)
-cov(airquality, use = “pair”)</p>
-</blockquote>
+<p>Podemos calcular as covariâncias e as correlações dos dados no data frame airquality pelo proceddimento <em>pairwise deletions</em> no R como:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="métodos-básicos-de-imputação.html#cb35-1" aria-hidden="true"></a>a &lt;-<span class="st"> </span><span class="kw">cor</span>(airquality, <span class="dt">use =</span> <span class="st">&quot;pair&quot;</span>) </span>
+<span id="cb35-2"><a href="métodos-básicos-de-imputação.html#cb35-2" aria-hidden="true"></a><span class="kw">print</span>(a, <span class="dt">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##           Ozone Solar.R    Wind   Temp    Month      Day
+## Ozone    1.0000  0.3483 -0.6015  0.698  0.16452 -0.01323
+## Solar.R  0.3483  1.0000 -0.0568  0.276 -0.07530 -0.15027
+## Wind    -0.6015 -0.0568  1.0000 -0.458 -0.17829  0.02718
+## Temp     0.6984  0.2758 -0.4580  1.000  0.42095 -0.13059
+## Month    0.1645 -0.0753 -0.1783  0.421  1.00000 -0.00796
+## Day     -0.0132 -0.1503  0.0272 -0.131 -0.00796  1.00000</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="métodos-básicos-de-imputação.html#cb37-1" aria-hidden="true"></a>a &lt;-<span class="kw">cov</span>(airquality, <span class="dt">use =</span> <span class="st">&quot;pair&quot;</span>)</span>
+<span id="cb37-2"><a href="métodos-básicos-de-imputação.html#cb37-2" aria-hidden="true"></a><span class="kw">print</span>(a,<span class="dt">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##           Ozone Solar.R    Wind   Temp Month      Day
+## Ozone   1088.20 1056.58 -70.939 218.52  8.01   -3.818
+## Solar.R 1056.58 8110.52 -17.946 229.16 -9.52 -119.026
+## Wind     -70.94  -17.95  12.412 -15.27 -0.89    0.849
+## Temp     218.52  229.16 -15.272  89.59  5.64  -10.957
+## Month      8.01   -9.52  -0.890   5.64  2.01   -0.100
+## Day       -3.82 -119.03   0.849 -10.96 -0.10   78.580</code></pre>
 <p>O método é simples, usa todas as informações disponíveis e produz estimativas consistentes de média, correlações e covariâncias sob MCAR <!--- (Little e Rubin, 2002, p. 55)--->. No entanto, quando consideradas em conjunto, essas estimativas apresentam deficiências importantes. As estimativas podem ser tendenciosas se os dados não forem MCAR. Além disso, existem problemas computacionais. A matriz de correlação pode não ser definida positivamente, o que é um requisito para a maioria procedimentos multivariados. Podem ocorrer correlações fora do intervalo [-1, + 1], um problema que vem de diferentes subconjuntos usados para as covariâncias e as variâncias.</p>
 <p>Esses problemas são mais graves para variáveis altamente correlacionadas <!---(Little, 1992) --->. Outro problema é que não está claro qual tamanho de amostra deve ser usado para calcular os erros padrão. Tirar o tamanho médio da amostra resulta em erros padrão que são muito pequenos <!--- (Little, 1992)-->. A ideia
 por trás da exclusão aos pares é usar todas as informações disponíveis. Embora essa ideia seja boa, a análise adequada da matriz de pares requer técnicas sofisticadas de otimização e fórmulas especiais para calcular os erros padrão <!--- (Van Praag et al., 1985; Marsh, 1998)--->.</p>
@@ -237,37 +250,22 @@ por trás da exclusão aos pares é usar todas as informações disponíveis. Em
 <div id="mean-imputation" class="section level3" number="3.1.4">
 <h3><span class="header-section-number">3.1.4</span> Mean imputation</h3>
 <p>A <em>mean imputation</em> é substituir o <code>NA</code> em uma variável pela média dos valores observados. No caso da variável ser categórica, o valor <code>NA</code> pode ser substituído pela moda.</p>
-<p>Uma solução rápida para os dados ausentes é substituí-los pela média. Podemos usar a moda para dados categóricos.</p>
-<p>O pacote R <code>mice</code> (Van Buuren e Groothuis-Oudshoorn, 2011) implementa a <em>mean imputation </em>. Seja o dataset <code>airquality</code>, para imputar a média nas variáveis <code>Ozone</code> e <code>Solar.R</code> pode ser feito por</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="métodos-básicos-de-imputação.html#cb35-1" aria-hidden="true"></a><span class="kw">library</span>(mice)</span></code></pre></div>
-<pre><code>## Warning: package &#39;mice&#39; was built under R version 3.6.3</code></pre>
-<pre><code>## 
-## Attaching package: &#39;mice&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     cbind, rbind</code></pre>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="métodos-básicos-de-imputação.html#cb39-1" aria-hidden="true"></a>imp &lt;-<span class="st"> </span><span class="kw">mice</span>(airquality, <span class="dt">method =</span> <span class="st">&quot;mean&quot;</span>, <span class="dt">m =</span> <span class="dv">1</span>, <span class="dt">maxit =</span> <span class="dv">1</span>) </span></code></pre></div>
-<pre><code>## 
-##  iter imp variable
-##   1   1  Ozone  Solar.R</code></pre>
-<p>onde</p>
-<ul>
-<li>method = “mean” - especifica a imputação média;</li>
-<li>m = 1 solicita um único conjunto de dados imputado; e</li>
-<li>maxit = 1 define o número de iterações para 1 (sem iteração).</li>
-</ul>
-<p>A imputação média distorce a distribuição de várias maneiras. A Figura 1.1 mostra a distribuição da <code>Ozone</code> após a imputação.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="métodos-básicos-de-imputação.html#cb41-1" aria-hidden="true"></a><span class="kw">library</span>(ggplot2)</span>
-<span id="cb41-2"><a href="métodos-básicos-de-imputação.html#cb41-2" aria-hidden="true"></a>dados_observados &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">observado =</span> <span class="kw">na.omit</span>(airquality<span class="op">$</span>Ozone))</span>
-<span id="cb41-3"><a href="métodos-básicos-de-imputação.html#cb41-3" aria-hidden="true"></a>dados_imputados  &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">imputado =</span> imp<span class="op">$</span>imp<span class="op">$</span>Ozone)</span>
-<span id="cb41-4"><a href="métodos-básicos-de-imputação.html#cb41-4" aria-hidden="true"></a></span>
-<span id="cb41-5"><a href="métodos-básicos-de-imputação.html#cb41-5" aria-hidden="true"></a><span class="kw">ggplot</span>()<span class="op">+</span></span>
-<span id="cb41-6"><a href="métodos-básicos-de-imputação.html#cb41-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">data =</span> dados_observados, <span class="kw">aes</span>(<span class="dt">x=</span>observado), </span>
-<span id="cb41-7"><a href="métodos-básicos-de-imputação.html#cb41-7" aria-hidden="true"></a>                 <span class="dt">bins =</span> <span class="dv">15</span>, <span class="dt">fill=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
-<span id="cb41-8"><a href="métodos-básicos-de-imputação.html#cb41-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">data =</span> dados_imputados, <span class="kw">aes</span>(<span class="dt">x=</span>X1),</span>
-<span id="cb41-9"><a href="métodos-básicos-de-imputação.html#cb41-9" aria-hidden="true"></a>                 <span class="dt">bins =</span> <span class="dv">15</span>, <span class="dt">fill =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
-<span id="cb41-10"><a href="métodos-básicos-de-imputação.html#cb41-10" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Valores da variável Ozone&quot;</span>,</span>
-<span id="cb41-11"><a href="métodos-básicos-de-imputação.html#cb41-11" aria-hidden="true"></a>       <span class="dt">y =</span> <span class="st">&quot;Frequência&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="métodos-básicos-de-imputação.html#cb39-1" aria-hidden="true"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb39-2"><a href="métodos-básicos-de-imputação.html#cb39-2" aria-hidden="true"></a></span>
+<span id="cb39-3"><a href="métodos-básicos-de-imputação.html#cb39-3" aria-hidden="true"></a>dados_observados &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">observado =</span> <span class="kw">na.omit</span>(airquality<span class="op">$</span>Ozone))</span>
+<span id="cb39-4"><a href="métodos-básicos-de-imputação.html#cb39-4" aria-hidden="true"></a></span>
+<span id="cb39-5"><a href="métodos-básicos-de-imputação.html#cb39-5" aria-hidden="true"></a>num_missing &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">is.na</span>(airquality<span class="op">$</span>Ozone))</span>
+<span id="cb39-6"><a href="métodos-básicos-de-imputação.html#cb39-6" aria-hidden="true"></a></span>
+<span id="cb39-7"><a href="métodos-básicos-de-imputação.html#cb39-7" aria-hidden="true"></a>dados_imputados  &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">imputado =</span> <span class="kw">rep</span>(<span class="kw">mean</span>(airquality<span class="op">$</span>Ozone,<span class="dt">na.rm=</span>T),</span>
+<span id="cb39-8"><a href="métodos-básicos-de-imputação.html#cb39-8" aria-hidden="true"></a>                                              num_missing))</span>
+<span id="cb39-9"><a href="métodos-básicos-de-imputação.html#cb39-9" aria-hidden="true"></a></span>
+<span id="cb39-10"><a href="métodos-básicos-de-imputação.html#cb39-10" aria-hidden="true"></a><span class="kw">ggplot</span>()<span class="op">+</span></span>
+<span id="cb39-11"><a href="métodos-básicos-de-imputação.html#cb39-11" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">data =</span> dados_observados, <span class="kw">aes</span>(<span class="dt">x=</span>observado), </span>
+<span id="cb39-12"><a href="métodos-básicos-de-imputação.html#cb39-12" aria-hidden="true"></a>                 <span class="dt">bins =</span> <span class="dv">15</span>, <span class="dt">fill=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
+<span id="cb39-13"><a href="métodos-básicos-de-imputação.html#cb39-13" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">data =</span> dados_imputados, <span class="kw">aes</span>(<span class="dt">x=</span>imputado),</span>
+<span id="cb39-14"><a href="métodos-básicos-de-imputação.html#cb39-14" aria-hidden="true"></a>                 <span class="dt">bins =</span> <span class="dv">15</span>, <span class="dt">fill =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
+<span id="cb39-15"><a href="métodos-básicos-de-imputação.html#cb39-15" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Valores da variável Ozone&quot;</span>,</span>
+<span id="cb39-16"><a href="métodos-básicos-de-imputação.html#cb39-16" aria-hidden="true"></a>       <span class="dt">y =</span> <span class="st">&quot;Frequência&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-10"></span>
 <img src="MV_files/figure-html/unnamed-chunk-10-1.png" alt="Dados Observados e imputados" width="80%" />
 <p class="caption">
@@ -278,34 +276,34 @@ Figure 3.1: Dados Observados e imputados
 <p>A cor azul refere-se aos dados observados , vermelho aos dados imputados (também chamados de valores sintéticos ou imputações). A cor preta, aos dados completos, e também chamados de imputados.</p>
 <p>Na figura, a barra vermelha na média se destaca. Imputar a média criou uma distribuição bimodal. O desvio padrão nos dados completos é igual a 28.7, menor do que os dados observados, que é 33.</p>
 <p>A figura do lado direito mostra que a relação entre Ozônio e Solar.R é distorcida por causa das imputações. A correlação cai de 0,35 nos pontos azuis para 0,3 nos dados combinados.</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="métodos-básicos-de-imputação.html#cb42-1" aria-hidden="true"></a><span class="kw">library</span>(ggplot2)</span>
-<span id="cb42-2"><a href="métodos-básicos-de-imputação.html#cb42-2" aria-hidden="true"></a></span>
-<span id="cb42-3"><a href="métodos-básicos-de-imputação.html#cb42-3" aria-hidden="true"></a>dados &lt;-<span class="st"> </span><span class="kw">na.omit</span>(airquality[,<span class="kw">c</span>(<span class="st">&quot;Ozone&quot;</span>, <span class="st">&quot;Solar.R&quot;</span>)])</span>
-<span id="cb42-4"><a href="métodos-básicos-de-imputação.html#cb42-4" aria-hidden="true"></a></span>
-<span id="cb42-5"><a href="métodos-básicos-de-imputação.html#cb42-5" aria-hidden="true"></a>dados_observados &lt;-<span class="st"> </span><span class="kw">data.frame</span>(dados)</span>
-<span id="cb42-6"><a href="métodos-básicos-de-imputação.html#cb42-6" aria-hidden="true"></a></span>
-<span id="cb42-7"><a href="métodos-básicos-de-imputação.html#cb42-7" aria-hidden="true"></a>dados_ausentes   &lt;-<span class="st"> </span>airquality [<span class="kw">is.na</span>(airquality<span class="op">$</span>Ozone) <span class="op">|</span><span class="st"> </span></span>
-<span id="cb42-8"><a href="métodos-básicos-de-imputação.html#cb42-8" aria-hidden="true"></a><span class="st">                                </span><span class="kw">is.na</span>(airquality<span class="op">$</span>Solar.R),</span>
-<span id="cb42-9"><a href="métodos-básicos-de-imputação.html#cb42-9" aria-hidden="true"></a>                                <span class="kw">c</span>(<span class="st">&quot;Ozone&quot;</span>, <span class="st">&quot;Solar.R&quot;</span>) ]</span>
-<span id="cb42-10"><a href="métodos-básicos-de-imputação.html#cb42-10" aria-hidden="true"></a></span>
-<span id="cb42-11"><a href="métodos-básicos-de-imputação.html#cb42-11" aria-hidden="true"></a>Ozone_imputado &lt;-<span class="st"> </span><span class="kw">ifelse</span> (<span class="kw">is.na</span>(dados_ausentes<span class="op">$</span>Ozone),</span>
-<span id="cb42-12"><a href="métodos-básicos-de-imputação.html#cb42-12" aria-hidden="true"></a>                          <span class="kw">mean</span>(dados_observados<span class="op">$</span>Ozone),  </span>
-<span id="cb42-13"><a href="métodos-básicos-de-imputação.html#cb42-13" aria-hidden="true"></a>                          dados_ausentes<span class="op">$</span>Ozone)</span>
-<span id="cb42-14"><a href="métodos-básicos-de-imputação.html#cb42-14" aria-hidden="true"></a></span>
-<span id="cb42-15"><a href="métodos-básicos-de-imputação.html#cb42-15" aria-hidden="true"></a>Solar.R_imputado &lt;-<span class="st"> </span><span class="kw">ifelse</span> (<span class="kw">is.na</span>(dados_ausentes<span class="op">$</span>Solar.R),</span>
-<span id="cb42-16"><a href="métodos-básicos-de-imputação.html#cb42-16" aria-hidden="true"></a>                            <span class="kw">mean</span>(dados_observados<span class="op">$</span>Solar.R),  </span>
-<span id="cb42-17"><a href="métodos-básicos-de-imputação.html#cb42-17" aria-hidden="true"></a>                            dados_ausentes<span class="op">$</span>Solar.R)</span>
-<span id="cb42-18"><a href="métodos-básicos-de-imputação.html#cb42-18" aria-hidden="true"></a></span>
-<span id="cb42-19"><a href="métodos-básicos-de-imputação.html#cb42-19" aria-hidden="true"></a>dados_imputados  &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Ozone =</span> Ozone_imputado,</span>
-<span id="cb42-20"><a href="métodos-básicos-de-imputação.html#cb42-20" aria-hidden="true"></a>                               <span class="dt">Solar.R =</span> Solar.R_imputado)</span>
-<span id="cb42-21"><a href="métodos-básicos-de-imputação.html#cb42-21" aria-hidden="true"></a></span>
-<span id="cb42-22"><a href="métodos-básicos-de-imputação.html#cb42-22" aria-hidden="true"></a><span class="kw">ggplot</span>()<span class="op">+</span></span>
-<span id="cb42-23"><a href="métodos-básicos-de-imputação.html#cb42-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> dados_observados, <span class="kw">aes</span>(<span class="dt">y=</span>Ozone, <span class="dt">x=</span>Solar.R), </span>
-<span id="cb42-24"><a href="métodos-básicos-de-imputação.html#cb42-24" aria-hidden="true"></a>             <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
-<span id="cb42-25"><a href="métodos-básicos-de-imputação.html#cb42-25" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> dados_imputados, <span class="kw">aes</span>(<span class="dt">y=</span>Ozone, <span class="dt">x =</span> Solar.R),</span>
-<span id="cb42-26"><a href="métodos-básicos-de-imputação.html#cb42-26" aria-hidden="true"></a>             <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
-<span id="cb42-27"><a href="métodos-básicos-de-imputação.html#cb42-27" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Variável Ozone&quot;</span>,</span>
-<span id="cb42-28"><a href="métodos-básicos-de-imputação.html#cb42-28" aria-hidden="true"></a>       <span class="dt">x =</span> <span class="st">&quot;Variável Solar.R&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="métodos-básicos-de-imputação.html#cb40-1" aria-hidden="true"></a><span class="kw">library</span>(ggplot2)</span>
+<span id="cb40-2"><a href="métodos-básicos-de-imputação.html#cb40-2" aria-hidden="true"></a></span>
+<span id="cb40-3"><a href="métodos-básicos-de-imputação.html#cb40-3" aria-hidden="true"></a>dados &lt;-<span class="st"> </span><span class="kw">na.omit</span>(airquality[,<span class="kw">c</span>(<span class="st">&quot;Ozone&quot;</span>, <span class="st">&quot;Solar.R&quot;</span>)])</span>
+<span id="cb40-4"><a href="métodos-básicos-de-imputação.html#cb40-4" aria-hidden="true"></a></span>
+<span id="cb40-5"><a href="métodos-básicos-de-imputação.html#cb40-5" aria-hidden="true"></a>dados_observados &lt;-<span class="st"> </span><span class="kw">data.frame</span>(dados)</span>
+<span id="cb40-6"><a href="métodos-básicos-de-imputação.html#cb40-6" aria-hidden="true"></a></span>
+<span id="cb40-7"><a href="métodos-básicos-de-imputação.html#cb40-7" aria-hidden="true"></a>dados_ausentes   &lt;-<span class="st"> </span>airquality [<span class="kw">is.na</span>(airquality<span class="op">$</span>Ozone) <span class="op">|</span><span class="st"> </span></span>
+<span id="cb40-8"><a href="métodos-básicos-de-imputação.html#cb40-8" aria-hidden="true"></a><span class="st">                                </span><span class="kw">is.na</span>(airquality<span class="op">$</span>Solar.R),</span>
+<span id="cb40-9"><a href="métodos-básicos-de-imputação.html#cb40-9" aria-hidden="true"></a>                                <span class="kw">c</span>(<span class="st">&quot;Ozone&quot;</span>, <span class="st">&quot;Solar.R&quot;</span>) ]</span>
+<span id="cb40-10"><a href="métodos-básicos-de-imputação.html#cb40-10" aria-hidden="true"></a></span>
+<span id="cb40-11"><a href="métodos-básicos-de-imputação.html#cb40-11" aria-hidden="true"></a>Ozone_imputado &lt;-<span class="st"> </span><span class="kw">ifelse</span> (<span class="kw">is.na</span>(dados_ausentes<span class="op">$</span>Ozone),</span>
+<span id="cb40-12"><a href="métodos-básicos-de-imputação.html#cb40-12" aria-hidden="true"></a>                          <span class="kw">mean</span>(dados_observados<span class="op">$</span>Ozone),  </span>
+<span id="cb40-13"><a href="métodos-básicos-de-imputação.html#cb40-13" aria-hidden="true"></a>                          dados_ausentes<span class="op">$</span>Ozone)</span>
+<span id="cb40-14"><a href="métodos-básicos-de-imputação.html#cb40-14" aria-hidden="true"></a></span>
+<span id="cb40-15"><a href="métodos-básicos-de-imputação.html#cb40-15" aria-hidden="true"></a>Solar.R_imputado &lt;-<span class="st"> </span><span class="kw">ifelse</span> (<span class="kw">is.na</span>(dados_ausentes<span class="op">$</span>Solar.R),</span>
+<span id="cb40-16"><a href="métodos-básicos-de-imputação.html#cb40-16" aria-hidden="true"></a>                            <span class="kw">mean</span>(dados_observados<span class="op">$</span>Solar.R),  </span>
+<span id="cb40-17"><a href="métodos-básicos-de-imputação.html#cb40-17" aria-hidden="true"></a>                            dados_ausentes<span class="op">$</span>Solar.R)</span>
+<span id="cb40-18"><a href="métodos-básicos-de-imputação.html#cb40-18" aria-hidden="true"></a></span>
+<span id="cb40-19"><a href="métodos-básicos-de-imputação.html#cb40-19" aria-hidden="true"></a>dados_imputados  &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Ozone =</span> Ozone_imputado,</span>
+<span id="cb40-20"><a href="métodos-básicos-de-imputação.html#cb40-20" aria-hidden="true"></a>                               <span class="dt">Solar.R =</span> Solar.R_imputado)</span>
+<span id="cb40-21"><a href="métodos-básicos-de-imputação.html#cb40-21" aria-hidden="true"></a></span>
+<span id="cb40-22"><a href="métodos-básicos-de-imputação.html#cb40-22" aria-hidden="true"></a><span class="kw">ggplot</span>()<span class="op">+</span></span>
+<span id="cb40-23"><a href="métodos-básicos-de-imputação.html#cb40-23" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> dados_observados, <span class="kw">aes</span>(<span class="dt">y=</span>Ozone, <span class="dt">x=</span>Solar.R), </span>
+<span id="cb40-24"><a href="métodos-básicos-de-imputação.html#cb40-24" aria-hidden="true"></a>             <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
+<span id="cb40-25"><a href="métodos-básicos-de-imputação.html#cb40-25" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> dados_imputados, <span class="kw">aes</span>(<span class="dt">y=</span>Ozone, <span class="dt">x =</span> Solar.R),</span>
+<span id="cb40-26"><a href="métodos-básicos-de-imputação.html#cb40-26" aria-hidden="true"></a>             <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
+<span id="cb40-27"><a href="métodos-básicos-de-imputação.html#cb40-27" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Variável Ozone&quot;</span>,</span>
+<span id="cb40-28"><a href="métodos-básicos-de-imputação.html#cb40-28" aria-hidden="true"></a>       <span class="dt">x =</span> <span class="st">&quot;Variável Solar.R&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-11"></span>
 <img src="MV_files/figure-html/unnamed-chunk-11-1.png" alt="Relação entre Ozone e Solar.R" width="80%" />
 <p class="caption">
@@ -313,33 +311,48 @@ Figure 3.2: Relação entre Ozone e Solar.R
 </p>
 </div>
 <p>A imputação média é uma solução rápida e simples para os <em>missing values</em>. No entanto, subestima a variância, altera as relações entre as variáveis, enviesar quase qualquer estimativa diferente da média e enviesar a estimativa da média quando os dados não são MCAR.</p>
-<p>A imputação média talvez deva ser usada apenas como uma correção rápida quando um punhado de valores está faltando, e deve ser evitada em geral.</p>
+<p>A imputação média talvez deva ser usada apenas como uma correção rápida e deve ser evitada em geral.</p>
 </div>
 <div id="regression-imputation" class="section level3" number="3.1.5">
 <h3><span class="header-section-number">3.1.5</span> Regression imputation</h3>
 <p>A <em>Regression imputation</em> incorpora o conhecimento de outras variáveis com a ideia de produzir imputações mais inteligentes. A primeira etapa envolve a construção de um modelo a partir dos dados observados. As previsões para os casos incompletos são então calculadas de acordo com o modelo ajustado e servem como substitutos para os dados ausentes.</p>
 <p>Suponha que modelamos <code>Ozone</code> pela função de regressão linear de <code>Solar.R</code>.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="métodos-básicos-de-imputação.html#cb43-1" aria-hidden="true"></a>fit      &lt;-<span class="st"> </span><span class="kw">lm</span> (Ozone <span class="op">~</span><span class="st"> </span>Solar.R, <span class="dt">data =</span> airquality)</span>
-<span id="cb43-2"><a href="métodos-básicos-de-imputação.html#cb43-2" aria-hidden="true"></a>pred  &lt;-<span class="st"> </span><span class="kw">predict</span> (fit, <span class="dt">newdata =</span> <span class="kw">ic</span> (airquality))</span>
-<span id="cb43-3"><a href="métodos-básicos-de-imputação.html#cb43-3" aria-hidden="true"></a>pred  &lt;-<span class="st"> </span><span class="kw">data.frame</span> (<span class="dt">Ozone_imputado=</span>pred, <span class="kw">ic</span>(airquality) )</span>
-<span id="cb43-4"><a href="métodos-básicos-de-imputação.html#cb43-4" aria-hidden="true"></a>pred  &lt;-<span class="st"> </span>pred[<span class="op">!</span><span class="kw">is.na</span>(Ozone_imputado), ]</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="métodos-básicos-de-imputação.html#cb41-1" aria-hidden="true"></a>fit      &lt;-<span class="st"> </span><span class="kw">lm</span> (Ozone <span class="op">~</span><span class="st"> </span>Solar.R, <span class="dt">data =</span> airquality)</span>
+<span id="cb41-2"><a href="métodos-básicos-de-imputação.html#cb41-2" aria-hidden="true"></a><span class="kw">summary</span>(fit)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Ozone ~ Solar.R, data = airquality)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -48.292 -21.361  -8.864  16.373 119.136 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 18.59873    6.74790   2.756 0.006856 ** 
+## Solar.R      0.12717    0.03278   3.880 0.000179 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 31.33 on 109 degrees of freedom
+##   (42 observations deleted due to missingness)
+## Multiple R-squared:  0.1213,	Adjusted R-squared:  0.1133 
+## F-statistic: 15.05 on 1 and 109 DF,  p-value: 0.0001793</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="métodos-básicos-de-imputação.html#cb43-1" aria-hidden="true"></a>pred  &lt;-<span class="st"> </span><span class="kw">predict</span> (fit, <span class="dt">newdata =</span> airquality[<span class="kw">is.na</span>(airquality<span class="op">$</span>Ozone), ])</span>
+<span id="cb43-2"><a href="métodos-básicos-de-imputação.html#cb43-2" aria-hidden="true"></a>pred  &lt;-<span class="st"> </span><span class="kw">data.frame</span> (<span class="dt">Ozone_imputado=</span>pred, airquality[<span class="kw">is.na</span>(airquality<span class="op">$</span>Ozone), ] )</span>
+<span id="cb43-3"><a href="métodos-básicos-de-imputação.html#cb43-3" aria-hidden="true"></a>pred  &lt;-<span class="st"> </span>pred[<span class="op">!</span><span class="kw">is.na</span>(Ozone_imputado), ]</span></code></pre></div>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="métodos-básicos-de-imputação.html#cb44-1" aria-hidden="true"></a>dados &lt;-<span class="st"> </span><span class="kw">na.omit</span>(airquality[,<span class="kw">c</span>(<span class="st">&quot;Ozone&quot;</span>, <span class="st">&quot;Solar.R&quot;</span>)])</span>
-<span id="cb44-2"><a href="métodos-básicos-de-imputação.html#cb44-2" aria-hidden="true"></a></span>
-<span id="cb44-3"><a href="métodos-básicos-de-imputação.html#cb44-3" aria-hidden="true"></a>dados_observados &lt;-<span class="st"> </span><span class="kw">data.frame</span>(dados)</span>
+<span id="cb44-2"><a href="métodos-básicos-de-imputação.html#cb44-2" aria-hidden="true"></a>dados_observados &lt;-<span class="st"> </span><span class="kw">data.frame</span>(dados)</span>
+<span id="cb44-3"><a href="métodos-básicos-de-imputação.html#cb44-3" aria-hidden="true"></a>Ozone_imputado &lt;-<span class="st"> </span>pred</span>
 <span id="cb44-4"><a href="métodos-básicos-de-imputação.html#cb44-4" aria-hidden="true"></a></span>
-<span id="cb44-5"><a href="métodos-básicos-de-imputação.html#cb44-5" aria-hidden="true"></a></span>
-<span id="cb44-6"><a href="métodos-básicos-de-imputação.html#cb44-6" aria-hidden="true"></a>Ozone_imputado &lt;-<span class="st"> </span>pred</span>
-<span id="cb44-7"><a href="métodos-básicos-de-imputação.html#cb44-7" aria-hidden="true"></a></span>
-<span id="cb44-8"><a href="métodos-básicos-de-imputação.html#cb44-8" aria-hidden="true"></a></span>
-<span id="cb44-9"><a href="métodos-básicos-de-imputação.html#cb44-9" aria-hidden="true"></a></span>
-<span id="cb44-10"><a href="métodos-básicos-de-imputação.html#cb44-10" aria-hidden="true"></a><span class="kw">ggplot</span>()<span class="op">+</span></span>
-<span id="cb44-11"><a href="métodos-básicos-de-imputação.html#cb44-11" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> dados_observados, <span class="kw">aes</span>(<span class="dt">y=</span>Ozone, <span class="dt">x=</span>Solar.R), </span>
-<span id="cb44-12"><a href="métodos-básicos-de-imputação.html#cb44-12" aria-hidden="true"></a>             <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
-<span id="cb44-13"><a href="métodos-básicos-de-imputação.html#cb44-13" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> Ozone_imputado, </span>
-<span id="cb44-14"><a href="métodos-básicos-de-imputação.html#cb44-14" aria-hidden="true"></a>             <span class="kw">aes</span>(<span class="dt">y=</span>Ozone_imputado  , <span class="dt">x =</span> Solar.R),</span>
-<span id="cb44-15"><a href="métodos-básicos-de-imputação.html#cb44-15" aria-hidden="true"></a>             <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
-<span id="cb44-16"><a href="métodos-básicos-de-imputação.html#cb44-16" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Variável Ozone&quot;</span>,</span>
-<span id="cb44-17"><a href="métodos-básicos-de-imputação.html#cb44-17" aria-hidden="true"></a>       <span class="dt">x =</span> <span class="st">&quot;Variável Solar.R&quot;</span>)</span></code></pre></div>
+<span id="cb44-5"><a href="métodos-básicos-de-imputação.html#cb44-5" aria-hidden="true"></a><span class="kw">ggplot</span>()<span class="op">+</span></span>
+<span id="cb44-6"><a href="métodos-básicos-de-imputação.html#cb44-6" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> dados_observados, <span class="kw">aes</span>(<span class="dt">y=</span>Ozone, <span class="dt">x=</span>Solar.R), </span>
+<span id="cb44-7"><a href="métodos-básicos-de-imputação.html#cb44-7" aria-hidden="true"></a>             <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
+<span id="cb44-8"><a href="métodos-básicos-de-imputação.html#cb44-8" aria-hidden="true"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> Ozone_imputado, </span>
+<span id="cb44-9"><a href="métodos-básicos-de-imputação.html#cb44-9" aria-hidden="true"></a>             <span class="kw">aes</span>(<span class="dt">y=</span>Ozone_imputado  , <span class="dt">x =</span> Solar.R),</span>
+<span id="cb44-10"><a href="métodos-básicos-de-imputação.html#cb44-10" aria-hidden="true"></a>             <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)<span class="op">+</span></span>
+<span id="cb44-11"><a href="métodos-básicos-de-imputação.html#cb44-11" aria-hidden="true"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Variável Ozone&quot;</span>,</span>
+<span id="cb44-12"><a href="métodos-básicos-de-imputação.html#cb44-12" aria-hidden="true"></a>       <span class="dt">x =</span> <span class="st">&quot;Variável Solar.R&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-13"></span>
 <img src="MV_files/figure-html/unnamed-chunk-13-1.png" alt="Regression imputation entre Ozone e Solar.R" width="80%" />
 <p class="caption">
