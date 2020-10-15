@@ -11,7 +11,7 @@ São criados $m$ conjutos de dados que preservam todos os valores observados, ma
 ### Exemplo 1
 
 
-Ao data frame `airquality` será aplicada a *multiple interations* para estimar os valores faltantes para as variáveis faltantes `Ozone` e  `Solar.R`. Assim, serão
+O data frame `airquality` será aplicada a *multiple interations* para estimar os valores faltantes para as variáveis faltantes `Ozone` e  `Solar.R`. Assim, serão
 
 1. gerados 5 data frames com valores ;
 2. ajustados 5 modelos para predizer `Ozone`; e 
