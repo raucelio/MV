@@ -10,7 +10,6 @@ São criados $m$ conjutos de dados que preservam todos os valores observados, ma
 
 ### Exemplo 1
 
-Continuing with the airquality dataset, it is straightforward to apply multiple imputation. The following code imputes the missing data ﬁve times, ﬁts a linear regression model to predict Ozone in each of the imputed datasets, and pools the ﬁve sets of estimated parameters.
 
 Ao data frame `airquality` será aplicada a *multiple interations* para estimar os valores faltantes para as variáveis faltantes `Ozone` e  `Solar.R`. Assim, serão
 
