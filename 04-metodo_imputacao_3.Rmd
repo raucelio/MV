@@ -39,3 +39,4 @@ coef(summary(fit))
 
 As soluções são próximas, devido ao fato da maioria dos *missing values* ocorrem na variável dependente. Os erros padrão gerados por *multiple imputation* são levemente  menores que os gerados pelo modelo que usa os casos completos.
 
+### Exemplo 2
