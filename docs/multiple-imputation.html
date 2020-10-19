@@ -24,7 +24,7 @@
 <meta name="author" content="Inferir Estatística" />
 
 
-<meta name="date" content="2020-10-14" />
+<meta name="date" content="2020-10-19" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -163,10 +163,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="4" data-path="multiple-imputation.html"><a href="multiple-imputation.html"><i class="fa fa-check"></i><b>4</b> Multiple imputation</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="multiple-imputation.html"><a href="multiple-imputation.html#multiple-imputation-1"><i class="fa fa-check"></i><b>4.1</b> Multiple imputation</a>
+<li class="chapter" data-level="4.1" data-path="multiple-imputation.html"><a href="multiple-imputation.html#multiple-imputation-1"><i class="fa fa-check"></i><b>4.1</b> Multiple imputation</a></li>
+<li class="chapter" data-level="4.2" data-path="multiple-imputation.html"><a href="multiple-imputation.html#exemplos"><i class="fa fa-check"></i><b>4.2</b> Exemplos</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="intro.html"><a href="intro.html#exemplo-1"><i class="fa fa-check"></i><b>4.1.1</b> Exemplo 1</a></li>
-<li class="chapter" data-level="4.1.2" data-path="intro.html"><a href="intro.html#exemplo-2"><i class="fa fa-check"></i><b>4.1.2</b> Exemplo 2</a></li>
+<li class="chapter" data-level="4.2.1" data-path="multiple-imputation.html"><a href="multiple-imputation.html#método-de-imputação-múltipla"><i class="fa fa-check"></i><b>4.2.1</b> Método de imputação múltipla</a></li>
+<li class="chapter" data-level="4.2.2" data-path="multiple-imputation.html"><a href="multiple-imputation.html#manipulando-na"><i class="fa fa-check"></i><b>4.2.2</b> Manipulando NA</a></li>
+<li class="chapter" data-level="4.2.3" data-path="multiple-imputation.html"><a href="multiple-imputation.html#uso-básico-da-função-mice"><i class="fa fa-check"></i><b>4.2.3</b> Uso básico da função mice</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="referências.html"><a href="referências.html"><i class="fa fa-check"></i>Referências</a></li>
@@ -194,11 +196,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Capítulo 4</span> Multiple imputation</h1>
 <div id="multiple-imputation-1" class="section level2" number="4.1">
 <h2><span class="header-section-number">4.1</span> Multiple imputation</h2>
-<p>A <em>multiple imputation</em> cria <span class="math inline">\(m &gt; 1\)</span> conjuntos de dados completos. Cada um desses conjuntos de dados é analisado por software de análise padrão. Os m resultados são agrupados em uma estimativa pontual <!--- final mais o erro padrão por regras de agrupamento simples ("regras de Rubin"). A Figura 1.5 ilustra as três etapas principais da imputação múltipla: imputação, análise e agrupamento. ---></p>
+<p>A <em>multiple imputation</em> cria <span class="math inline">\(m &gt; 1\)</span> conjuntos de dados completos. Cada um desses conjuntos de dados é analisado por software de análise padrão. Os m resultados são agrupados em uma estimativa pontual. <!--- final mais o erro padrão por regras de agrupamento simples ("regras de Rubin"). A Figura 1.5 ilustra as três etapas principais da imputação múltipla: imputação, análise e agrupamento. ---></p>
 <p>A análise começa com dados observados e incompletos. A <em>multiple imputation</em> cria várias versões completas dos dados, substituindo os valores ausentes por valores p lausíveis. Esses valores são extraídos de uma distribuição modelada especiﬁcamente para cada valor ausente. <!---A Figura 1.5 retrata m = 3 conjuntos de dados imputados--->.</p>
 <p>São criados <span class="math inline">\(m\)</span> conjutos de dados que preservam todos os valores observados, mas diferem nos valores imputados. A segunda etapa é estimar os parâmetros de interesse de cada conjunto de dados imputado. Isso normalmente é feito aplicando o método analítico que teríamos usado se os dados estivessem completos. Os resultados serão diferentes porque seus dados de entrada diferem. É importante perceber que essas diferenças são causadas apenas por causa da incerteza sobre qual valor imputar. A última etapa é reunir as m estimativas do parâmetro em uma estimativa e estimar sua variância. A variância combina a variância de amostragem convencional (variância dentro da imputação) e a variância extra causada pela variância extra de dados perdidos causada pelos dados perdidos (variância entre imputação). Sob as condições apropriadas, as estimativas combinadas não são viesadas e têm as propriedades estatísticas corretas.</p>
-<div id="exemplo-1" class="section level3" number="4.1.1">
-<h3><span class="header-section-number">4.1.1</span> Exemplo 1</h3>
+</div>
+<div id="exemplos" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Exemplos</h2>
+<div id="método-de-imputação-múltipla" class="section level3" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Método de imputação múltipla</h3>
 <p>O data frame <code>airquality</code> será aplicada a <em>multiple interations</em> para estimar os valores faltantes para as variáveis faltantes <code>Ozone</code> e <code>Solar.R</code>. Assim, serão</p>
 <ol style="list-style-type: decimal">
 <li>gerados 5 data frames com valores;</li>
@@ -225,8 +230,110 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Solar.R       0.05982059  0.02318647  2.579979 1.123664e-02</code></pre>
 <p>As soluções são próximas, devido ao fato da maioria dos <em>missing values</em> ocorrem na variável dependente. Os erros padrão gerados por <em>multiple imputation</em> são levemente menores que os gerados pelo modelo que usa os casos completos.</p>
 </div>
-<div id="exemplo-2" class="section level3" number="4.1.2">
-<h3><span class="header-section-number">4.1.2</span> Exemplo 2</h3>
+<div id="manipulando-na" class="section level3" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> Manipulando NA</h3>
+<p>Os pacotes <code>base</code> e <code>stats</code> apresentam funções que são uteis para manipular <code>NA</code>. A seguir serão aplicadas algumas dessas funções no data frame airquality.</p>
+<p>funções utéis na manipulação do <code>NA</code>:</p>
+<ul>
+<li>anyNA() - Retorna <code>TRUE</code> se há um <code>NA</code> no objeto analizado.</li>
+</ul>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="multiple-imputation.html#cb55-1" aria-hidden="true"></a><span class="kw">anyNA</span>(airquality)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<ul>
+<li><code>is.na()</code> - Retorna um vetor lógico especificando quais elementos de um vetor são <code>NA</code>, missing.</li>
+</ul>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="multiple-imputation.html#cb57-1" aria-hidden="true"></a>casos_missing &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">is.na</span>(airquality<span class="op">$</span>Ozone))</span>
+<span id="cb57-2"><a href="multiple-imputation.html#cb57-2" aria-hidden="true"></a>casos_missing</span></code></pre></div>
+<pre><code>##  [1]   5  10  25  26  27  32  33  34  35  36  37  39  42  43  45  46  52  53  54
+## [20]  55  56  57  58  59  60  61  65  72  75  83  84 102 103 107 115 119 150</code></pre>
+<ul>
+<li><code>complete.case()</code> - Retorna um vetor lógico especificando quais elementos /linhas são casos completos, isto é, sem nenhum valor missing.</li>
+</ul>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="multiple-imputation.html#cb59-1" aria-hidden="true"></a>casos_completos &lt;-<span class="st"> </span>airquality[<span class="kw">complete.cases</span>(airquality), ]</span>
+<span id="cb59-2"><a href="multiple-imputation.html#cb59-2" aria-hidden="true"></a><span class="kw">head</span>(casos_completos)</span></code></pre></div>
+<pre><code>##   Ozone Solar.R Wind Temp Month Day
+## 1    41     190  7.4   67     5   1
+## 2    36     118  8.0   72     5   2
+## 3    12     149 12.6   74     5   3
+## 4    18     313 11.5   62     5   4
+## 7    23     299  8.6   65     5   7
+## 8    19      99 13.8   59     5   8</code></pre>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="multiple-imputation.html#cb61-1" aria-hidden="true"></a>casos_incompletos &lt;-<span class="st"> </span>airquality[<span class="op">!</span><span class="kw">complete.cases</span>(airquality), ]</span>
+<span id="cb61-2"><a href="multiple-imputation.html#cb61-2" aria-hidden="true"></a><span class="kw">head</span>(casos_incompletos)</span></code></pre></div>
+<pre><code>##    Ozone Solar.R Wind Temp Month Day
+## 5     NA      NA 14.3   56     5   5
+## 6     28      NA 14.9   66     5   6
+## 10    NA     194  8.6   69     5  10
+## 11     7      NA  6.9   74     5  11
+## 25    NA      66 16.6   57     5  25
+## 26    NA     266 14.9   58     5  26</code></pre>
+<ul>
+<li><code>na.omit()</code>- Exclui os casos não completos de um data frame ou um elementos <code>NA</code> em um vetor.</li>
+</ul>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="multiple-imputation.html#cb63-1" aria-hidden="true"></a>casos_completos&lt;-<span class="st"> </span><span class="kw">na.omit</span>(airquality)</span>
+<span id="cb63-2"><a href="multiple-imputation.html#cb63-2" aria-hidden="true"></a><span class="kw">head</span>(casos_completos)</span></code></pre></div>
+<pre><code>##   Ozone Solar.R Wind Temp Month Day
+## 1    41     190  7.4   67     5   1
+## 2    36     118  8.0   72     5   2
+## 3    12     149 12.6   74     5   3
+## 4    18     313 11.5   62     5   4
+## 7    23     299  8.6   65     5   7
+## 8    19      99 13.8   59     5   8</code></pre>
+<ul>
+<li><code>is.nan()</code>- Retorna um vetor lógico especificando quais elementos de um vetor são <code>NaN</code>, missing. Essa função não retorna <code>TRUE</code> quando encontra um valor <code>NA</code>.</li>
+</ul>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="multiple-imputation.html#cb65-1" aria-hidden="true"></a><span class="kw">is.nan</span>(<span class="ot">NA</span>)</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+</div>
+<div id="uso-básico-da-função-mice" class="section level3" number="4.2.3">
+<h3><span class="header-section-number">4.2.3</span> Uso básico da função mice</h3>
+<p>O data frame <code>nhanes2</code> é nativo do pacote <code>mice</code>, possui 25 observações e 4 variáveis, numéricas ou categóricas. As variáveis são:</p>
+<ul>
+<li><p>age - classe de idade (1=20-39, 2=40-59, 3=60+)</p></li>
+<li><p>bmi - índice de massa corporal (imc= kg/m**2)</p></li>
+<li><p>hyp - apresenta hipertenção (1=no,2=yes)</p></li>
+<li><p>chl- coleterol total (mg/dL)</p></li>
+</ul>
+<p>A função <code>summary()</code> apresenta a quantidade de <code>NA</code> em cada variável.</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="multiple-imputation.html#cb67-1" aria-hidden="true"></a><span class="kw">library</span>(mice)</span>
+<span id="cb67-2"><a href="multiple-imputation.html#cb67-2" aria-hidden="true"></a><span class="kw">summary</span>(nhanes2)</span></code></pre></div>
+<pre><code>##     age          bmi          hyp          chl       
+##  20-39:12   Min.   :20.40   no  :13   Min.   :113.0  
+##  40-59: 7   1st Qu.:22.65   yes : 4   1st Qu.:185.0  
+##  60-99: 6   Median :26.75   NA&#39;s: 8   Median :187.0  
+##             Mean   :26.56             Mean   :191.4  
+##             3rd Qu.:28.93             3rd Qu.:212.0  
+##             Max.   :35.30             Max.   :284.0  
+##             NA&#39;s   :9                 NA&#39;s   :10</code></pre>
+<p>As variáveis <code>bmi</code>, <code>chl</code> e <code>chl</code> apresentam <code>NA</code>, para as variáveis numéricas serão inputadas pela média e a variável <code>hyp</code> terão os seus valores faltantes por méio de uma regressão logística:</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="multiple-imputation.html#cb69-1" aria-hidden="true"></a>imp &lt;-<span class="st"> </span><span class="kw">mice</span>(nhanes2, <span class="dt">meth=</span><span class="kw">c</span>(<span class="st">&#39;&#39;</span>,<span class="st">&#39;mean&#39;</span>,<span class="st">&#39;logreg&#39;</span>,<span class="st">&#39;mean&#39;</span>), <span class="dt">printFlag =</span> F)</span>
+<span id="cb69-2"><a href="multiple-imputation.html#cb69-2" aria-hidden="true"></a><span class="kw">complete</span>(imp)</span></code></pre></div>
+<pre><code>##      age     bmi hyp   chl
+## 1  20-39 26.5625  no 191.4
+## 2  40-59 22.7000  no 187.0
+## 3  20-39 26.5625  no 187.0
+## 4  60-99 26.5625  no 191.4
+## 5  20-39 20.4000  no 113.0
+## 6  60-99 26.5625 yes 184.0
+## 7  20-39 22.5000  no 118.0
+## 8  20-39 30.1000  no 187.0
+## 9  40-59 22.0000  no 238.0
+## 10 40-59 26.5625  no 191.4
+## 11 20-39 26.5625  no 191.4
+## 12 40-59 26.5625  no 191.4
+## 13 60-99 21.7000  no 206.0
+## 14 40-59 28.7000 yes 204.0
+## 15 20-39 29.6000  no 191.4
+## 16 20-39 26.5625  no 191.4
+## 17 60-99 27.2000 yes 284.0
+## 18 40-59 26.3000 yes 199.0
+## 19 20-39 35.3000  no 218.0
+## 20 60-99 25.5000 yes 191.4
+## 21 20-39 26.5625  no 191.4
+## 22 20-39 33.2000  no 229.0
+## 23 20-39 27.5000  no 131.0
+## 24 60-99 24.9000  no 191.4
+## 25 40-59 27.4000  no 186.0</code></pre>
 
 </div>
 </div>

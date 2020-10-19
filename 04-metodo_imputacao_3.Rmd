@@ -2,13 +2,15 @@
 
 ## Multiple imputation
 
-A *multiple imputation* cria $m > 1$ conjuntos de dados completos. Cada um desses conjuntos de dados é analisado por software de análise padrão. Os m resultados são agrupados em uma estimativa pontual <!--- final mais o erro padrão por regras de agrupamento simples ("regras de Rubin"). A Figura 1.5 ilustra as três etapas principais da imputação múltipla: imputação, análise e agrupamento. --->
+A *multiple imputation* cria $m > 1$ conjuntos de dados completos. Cada um desses conjuntos de dados é analisado por software de análise padrão. Os m resultados são agrupados em uma estimativa pontual. <!--- final mais o erro padrão por regras de agrupamento simples ("regras de Rubin"). A Figura 1.5 ilustra as três etapas principais da imputação múltipla: imputação, análise e agrupamento. --->
 
 A análise começa com dados observados e incompletos. A *multiple imputation* cria várias versões completas dos dados, substituindo os valores ausentes por valores p lausíveis. Esses valores são extraídos de uma distribuição modelada especiﬁcamente para cada valor ausente. <!---A Figura 1.5 retrata m = 3 conjuntos de dados imputados--->. 
 
 São criados $m$ conjutos de dados que preservam todos os valores observados, mas diferem nos valores imputados. A segunda etapa é estimar os parâmetros de interesse de cada conjunto de dados imputado. Isso normalmente é feito aplicando o método analítico que teríamos usado se os dados estivessem completos. Os resultados serão diferentes porque seus dados de entrada diferem. É importante perceber que essas diferenças são causadas apenas por causa da incerteza sobre qual valor imputar. A última etapa é reunir as m estimativas do parâmetro em uma estimativa e estimar sua variância. A variância combina a variância de amostragem convencional (variância dentro da imputação) e a variância extra causada pela variância extra de dados perdidos causada pelos dados perdidos (variância entre imputação). Sob as condições apropriadas, as estimativas combinadas não são viesadas e têm as propriedades estatísticas corretas.
 
-### Exemplo 1
+## Exemplos
+
+### Método de imputação múltipla
 
 
 O data frame `airquality` será aplicada a *multiple interations* para estimar os valores faltantes para as variáveis faltantes `Ozone` e  `Solar.R`. Assim, serão
@@ -39,4 +41,83 @@ coef(summary(fit))
 
 As soluções são próximas, devido ao fato da maioria dos *missing values* ocorrem na variável dependente. Os erros padrão gerados por *multiple imputation* são levemente  menores que os gerados pelo modelo que usa os casos completos.
 
-### Exemplo 2
+### Manipulando NA
+
+Os pacotes `base` e `stats` apresentam funções que são uteis para manipular  `NA`. A seguir serão aplicadas algumas dessas funções no data frame airquality. 
+
+
+funções utéis na manipulação do `NA`:
+
+
++ anyNA() - Retorna `TRUE` se há um `NA` no objeto analizado.
+
+```{r}
+anyNA(airquality)
+```
+
++ `is.na()`  - Retorna um vetor lógico especificando quais elementos de um vetor são `NA`, missing.
+
+```{r}
+casos_missing <- which(is.na(airquality$Ozone))
+casos_missing
+```
+
+
++ `complete.case()` - Retorna um vetor lógico especificando quais elementos /linhas são casos completos, isto é, sem nenhum valor missing. 
+
+```{r}
+casos_completos <- airquality[complete.cases(airquality), ]
+head(casos_completos)
+
+casos_incompletos <- airquality[!complete.cases(airquality), ]
+head(casos_incompletos)
+```
+
+
++ `na.omit()`- Exclui os casos não completos de um data frame ou um elementos `NA` em um vetor.
+```{r}
+casos_completos<- na.omit(airquality)
+head(casos_completos)
+```
+
+
++ `is.nan()`- Retorna um vetor lógico especificando quais elementos de um vetor são `NaN`, missing. Essa função não retorna `TRUE` quando encontra um  valor `NA`.
+
+```{r}
+is.nan(NA)
+```
+
+### Uso básico da função mice
+
+O data frame `nhanes2` é nativo do pacote `mice`, possui 25 observações e 4 variáveis, numéricas ou categóricas. As variáveis são:
+
++ age - classe de idade (1=20-39, 2=40-59, 3=60+)
+
++ bmi - índice de massa corporal (imc= kg/m**2)
+
++ hyp - apresenta hipertenção (1=no,2=yes)
+
++ chl- coleterol total (mg/dL)
+
+
+A função `summary()` apresenta a quantidade de `NA` em cada variável.
+
+```{r}
+library(mice)
+summary(nhanes2)
+```
+
+
+As variáveis  `bmi`, `chl` e `chl`  apresentam `NA`, para as variáveis numéricas serão inputadas pela média e a variável `hyp` terão os seus valores faltantes por méio de uma regressão logística:
+
+```{r}
+imp <- mice(nhanes2, meth=c('','mean','logreg','mean'), printFlag = F)
+complete(imp)
+```
+
+
+
+
+
+
+
